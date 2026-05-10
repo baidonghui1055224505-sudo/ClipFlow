@@ -47,6 +47,16 @@ HF_TOKEN=hf-your-huggingface-token  # 可选，说话人分离功能需要
 > 获取 DeepSeek API Key：https://platform.deepseek.com/api_keys
 > 获取 HuggingFace Token：https://huggingface.co/settings/tokens
 
+#### API 费用说明
+
+| 功能 | 是否必需 | 费用 | 说明 |
+|------|:--:|------|------|
+| 语音转写 | 必装 | **免费** | 本地 Whisper 模型，离线可用 |
+| AI 对话剪辑 | 推荐 | **DeepSeek API 按量计费** | 约 ¥1/百万字，每次对话剪辑几分钱，充值 10 元够用很久 |
+| 说话人分离 | 可选 | **免费** | HF Token 免费申请，模型本地运行 |
+
+> 不配 API Key 也可用：上传视频 → 转写 → 手动点选段落 → 导出。只是没有 AI 帮你自动选。
+
 ### 4. 启动服务
 
 ```bash
