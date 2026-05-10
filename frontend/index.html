@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>自动视频剪辑工具</title>
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   DESIGN SYSTEM — 自动视频剪辑工具
+   AI 语音剪辑 · 设计团队展示版
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── CSS Variables / Theme Engine ── */
+:root {
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,.06);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,.08);
+  --shadow-xl: 0 16px 48px rgba(0,0,0,.10);
+  --font-sans: -apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  --font-mono: "SF Mono","Fira Code","Cascadia Code",monospace;
+  --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Theme: 极简白 (default) */
+[data-theme="light"] {
+  --bg-root: #f5f5f7;
+  --bg-surface: #ffffff;
+  --bg-elevated: #ffffff;
+  --bg-hover: #f0f0f2;
+  --bg-active: #e8e8ed;
+  --border: #e5e5ea;
+  --border-light: #f0f0f2;
+  --text-primary: #1d1d1f;
+  --text-secondary: #6e6e73;
+  --text-tertiary: #aeaeb2;
+  --accent: #0071e3;
+  --accent-hover: #0077ed;
+  --accent-soft: #e8f2fd;
+  --green: #30b158;
+  --green-soft: #e6f9ee;
+  --orange: #f5632d;
+  --orange-soft: #fef0e9;
+  --red: #e53935;
+  --purple: #8b5cf6;
+  --purple-soft: #f3f0ff;
+  --card-shadow: var(--shadow-sm);
+  --video-bg: #000;
+  --progress-bg: #e8e8ed;
+}
+
+/* Theme: 深邃黑 */
+[data-theme="dark"] {
+  --bg-root: #0a0a0a;
+  --bg-surface: #141414;
+  --bg-elevated: #1c1c1e;
+  --bg-hover: #242426;
+  --bg-active: #2c2c2e;
+  --border: #2c2c2e;
+  --border-light: #1f1f21;
+  --text-primary: #f5f5f7;
+  --text-secondary: #98989d;
+  --text-tertiary: #636366;
+  --accent: #3399ff;
+  --accent-hover: #5aafff;
+  --accent-soft: #0a1e3d;
+  --green: #30d158;
+  --green-soft: #0a2e14;
+  --orange: #ff7b42;
+  --orange-soft: #2e1609;
+  --red: #ff5252;
+  --purple: #a78bfa;
+  --purple-soft: #1a1236;
+  --card-shadow: 0 1px 3px rgba(0,0,0,.3);
+  --video-bg: #000;
+  --progress-bg: #2c2c2e;
+}
+
+/* Theme: 阿里橙 */
+[data-theme="warm"] {
+  --bg-root: #faf9f7;
+  --bg-surface: #fefdfb;
+  --bg-elevated: #ffffff;
+  --bg-hover: #f7f4ef;
+  --bg-active: #f0ebe0;
+  --border: #e8e2d6;
+  --border-light: #f3efe8;
+  --text-primary: #2d2418;
+  --text-secondary: #7a6f62;
+  --text-tertiary: #b8ad9f;
+  --accent: #ff6a00;
+  --accent-hover: #ff7f26;
+  --accent-soft: #fff2e8;
+  --green: #4caf50;
+  --green-soft: #edf7ee;
+  --orange: #ff6a00;
+  --orange-soft: #fff2e8;
+  --red: #d84339;
+  --purple: #7c5ce0;
+  --purple-soft: #f3f0ff;
+  --card-shadow: 0 2px 8px rgba(0,0,0,.04), 0 0 0 1px rgba(0,0,0,.03);
+  --video-bg: #1a1a1a;
+  --progress-bg: #e8e2d6;
+}
+
+/* ── Reset & Base ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:15px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{
+  font-family:var(--font-sans);
+  background:var(--bg-root);
+  color:var(--text-primary);
+  line-height:1.5;
+  min-height:100vh;
+  transition:background var(--transition),color var(--transition);
+}
+button,input,select,label{cursor:pointer;font-family:inherit}
+
+/* ── Layout ── */
+.app-shell{display:flex;min-height:100vh}
+.sidebar{
+  width:240px;flex-shrink:0;background:var(--bg-surface);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  padding:20px 16px;gap:24px;
+  transition:background var(--transition),border var(--transition);
+}
+.main-area{flex:1;display:flex;flex-direction:column;min-width:0}
+.topbar{
+  height:56px;display:flex;align-items:center;padding:0 24px;
+  gap:12px;border-bottom:1px solid var(--border);
+  background:var(--bg-surface);
+  transition:background var(--transition),border var(--transition);
+}
+.content{padding:20px 24px;flex:1;min-height:0;display:flex;flex-direction:column;gap:20px}
+
+/* ── Sidebar ── */
+.sidebar-logo{display:flex;align-items:center;gap:10px}
+.sidebar-logo .icon{
+  width:34px;height:34px;border-radius:var(--radius-md);
+  background:linear-gradient(135deg,var(--accent),var(--purple));
+  display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;
+}
+.sidebar-logo .title{font-size:1rem;font-weight:700;letter-spacing:-.01em;color:var(--text-primary)}
+.sidebar-logo .sub{font-size:.7rem;color:var(--text-tertiary);margin-top:1px}
+.sidebar-nav{display:flex;flex-direction:column;gap:2px}
+.sidebar-nav .nav-item{
+  display:flex;align-items:center;gap:8px;padding:8px 12px;
+  border-radius:var(--radius-sm);font-size:.82rem;font-weight:500;
+  color:var(--text-secondary);transition:all var(--transition);
+}
+.sidebar-nav .nav-item:hover{background:var(--bg-hover);color:var(--text-primary)}
+.sidebar-nav .nav-item.active{background:var(--accent-soft);color:var(--accent)}
+.sidebar-nav .nav-item .dot{width:7px;height:7px;border-radius:50%}
+.sidebar-section{margin-top:auto;display:flex;flex-direction:column;gap:12px}
+.sidebar-stats{
+  padding:14px;border-radius:var(--radius-md);background:var(--bg-hover);
+  font-size:.75rem;color:var(--text-secondary);
+  transition:background var(--transition);
+}
+.sidebar-stats .val{font-size:1.4rem;font-weight:700;color:var(--text-primary)}
+.theme-switcher{display:flex;gap:4px;padding:4px;border-radius:var(--radius-sm);background:var(--bg-hover)}
+.theme-btn{
+  flex:1;padding:5px 0;border-radius:4px;font-size:.68rem;font-weight:600;
+  border:none;background:transparent;color:var(--text-tertiary);
+  transition:all var(--transition);text-align:center;
+}
+.theme-btn.active{background:var(--bg-surface);color:var(--text-primary);box-shadow:var(--shadow-sm)}
+
+/* ── Topbar ── */
+.topbar .status-pill{
+  font-size:.75rem;padding:4px 12px;border-radius:20px;
+  font-weight:500;white-space:nowrap;
+  background:var(--bg-hover);color:var(--text-secondary);
+}
+.topbar .status-pill.success{background:var(--green-soft);color:var(--green)}
+.topbar .status-pill.warning{background:var(--orange-soft);color:var(--orange)}
+.topbar .status-pill.info{background:var(--accent-soft);color:var(--accent)}
+.topbar .actions{margin-left:auto;display:flex;gap:8px;align-items:center}
+.seg-badge{
+  font-size:.78rem;font-weight:600;padding:4px 14px;
+  border-radius:20px;background:var(--accent);color:#fff;
+  display:none;transition:all var(--transition);
+}
+.seg-badge.show{display:block}
+
+/* ── Buttons ── */
+.btn{
+  display:inline-flex;align-items:center;gap:6px;padding:8px 16px;
+  border-radius:var(--radius-sm);font-size:.8rem;font-weight:600;
+  border:none;white-space:nowrap;
+  transition:all var(--transition);
+}
+.btn:disabled{opacity:.35;cursor:not-allowed;pointer-events:none}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent-hover);box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.btn-success{background:var(--green);color:#fff}
+.btn-success:hover{filter:brightness(1.1)}
+.btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--text-primary)}
+.btn-outline:hover{background:var(--bg-hover)}
+.btn-ghost{background:transparent;color:var(--text-secondary);padding:6px 10px}
+.btn-ghost:hover{background:var(--bg-hover);color:var(--text-primary)}
+.btn-ghost.danger:hover{color:var(--red)}
+.btn-sm{padding:5px 10px;font-size:.72rem}
+.btn-lg{padding:10px 20px;font-size:.85rem}
+
+/* ── File upload button ── */
+.upload-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 20px;border-radius:var(--radius-sm);
+  background:var(--accent);color:#fff;font-weight:600;font-size:.82rem;
+  transition:all var(--transition);cursor:pointer;
+}
+.upload-btn:hover{background:var(--accent-hover);box-shadow:0 4px 12px rgba(0,0,0,.15);transform:translateY(-1px)}
+
+/* ── Progress ── */
+.progress-wrap{
+  display:none;height:3px;background:var(--progress-bg);
+  border-radius:2px;overflow:hidden;
+  transition:background var(--transition);
+}
+.progress-wrap.show{display:block}
+.progress-bar-inner{
+  height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--purple));
+  border-radius:2px;transition:width .4s cubic-bezier(.4,0,.2,1);
+}
+
+/* ── Content Columns ── */
+.columns{display:flex;gap:20px;flex:1;min-height:0}
+.col-left{width:40%;flex-shrink:0;display:flex;flex-direction:column;gap:16px;min-width:320px}
+.col-left .card{flex:1;min-height:0;display:flex;flex-direction:column}
+.col-right{flex:1;display:flex;flex-direction:column;min-width:0}
+
+/* ── Card ── */
+.card{
+  background:var(--bg-surface);border-radius:var(--radius-lg);
+  border:1px solid var(--border);
+  box-shadow:var(--card-shadow);
+  transition:all var(--transition);
+}
+.card-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 18px;border-bottom:1px solid var(--border-light);
+  font-size:.82rem;font-weight:600;color:var(--text-primary);
+  transition:border var(--transition);
+}
+.card-body{padding:16px 18px;display:flex;flex-direction:column;flex:1;min-height:0}
+.card-body.no-pad{padding:0}
+
+/* ── Upload mode tabs ── */
+.upload-tabs{display:flex;gap:0;margin-bottom:2px}
+.upload-tab{
+  flex:1;padding:7px 0;border:none;background:var(--bg-hover);
+  font-size:.72rem;font-weight:600;color:var(--text-tertiary);
+  transition:all var(--transition);text-align:center;
+}
+.upload-tab:first-child{border-radius:var(--radius-sm) 0 0 var(--radius-sm)}
+.upload-tab:last-child{border-radius:0 var(--radius-sm) var(--radius-sm) 0}
+.upload-tab.active{background:var(--accent);color:#fff}
+.url-input-row{display:flex;gap:8px;margin-bottom:4px}
+.url-input-row input{
+  flex:1;padding:8px 12px;border-radius:var(--radius-sm);
+  border:1.5px solid var(--border);background:var(--bg-surface);
+  font-size:.75rem;outline:none;color:var(--text-primary);
+  transition:border var(--transition);
+}
+.url-input-row input:focus{border-color:var(--accent)}
+.url-input-row input::placeholder{color:var(--text-tertiary)}
+
+/* ── Video Player ── */
+.video-wrapper{background:var(--video-bg);border-radius:var(--radius-lg);overflow:hidden;position:relative;min-height:200px;display:flex;align-items:center;justify-content:center}
+.video-wrapper video{display:block;width:100%;max-height:380px;object-fit:contain}
+.video-wrapper video.show{display:block}
+.video-filename{font-size:.75rem;color:var(--text-secondary);padding:6px 0 0 4px}
+/* Upload placeholder */
+.upload-placeholder{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:12px;padding:40px 20px;cursor:pointer;
+  color:var(--text-tertiary);transition:all var(--transition);
+  border:2px dashed var(--border);border-radius:var(--radius-lg);
+  margin:16px;text-align:center;flex:1;align-self:stretch;
+}
+.upload-placeholder:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.upload-placeholder .upload-icon{
+  width:48px;height:48px;border-radius:50%;
+  background:var(--bg-hover);display:flex;align-items:center;justify-content:center;
+  transition:background var(--transition);
+}
+.upload-placeholder:hover .upload-icon{background:var(--accent-soft)}
+.upload-placeholder .upload-title{font-size:.85rem;font-weight:600;color:var(--text-secondary)}
+.upload-placeholder .upload-hint{font-size:.7rem;color:var(--text-tertiary)}
+
+/* ── Transcript ── */
+.transcript-list{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:1px}
+.transcript-list::-webkit-scrollbar{width:4px}
+.transcript-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.segment{
+  display:flex;align-items:flex-start;gap:10px;padding:9px 14px;
+  border-radius:var(--radius-sm);cursor:pointer;
+  transition:background .12s,box-shadow .12s;border-left:3px solid transparent;
+}
+.segment:hover{background:var(--bg-hover)}
+.segment.selected{
+  background:var(--accent-soft);border-left-color:var(--accent);
+}
+.segment.search-hit{background:#fef9e7;border-left-color:#f59e0b}
+.segment .time{
+  font-family:var(--font-mono);color:var(--text-tertiary);
+  font-size:.72rem;min-width:56px;padding-top:1px;flex-shrink:0;
+}
+.speaker-tag{
+  display:inline-flex;align-items:center;padding:2px 8px;border-radius:12px;
+  font-size:.68rem;font-weight:700;line-height:1.4;flex-shrink:0;
+  cursor:pointer;transition:transform var(--transition);margin-top:-1px;
+}
+.speaker-tag:hover{transform:scale(1.05)}
+.spk-0{background:#dbeafe;color:#1d4ed8}
+.spk-1{background:#fce7f3;color:#be185d}
+.spk-2{background:#d1fae5;color:#047857}
+.spk-3{background:#fef3c7;color:#b45309}
+.spk-4{background:#e9d5ff;color:#7c3aed}
+.seg-text{font-size:.82rem;line-height:1.55;color:var(--text-primary);word-break:break-word}
+
+/* ── Search ── */
+.search-box{
+  display:flex;align-items:center;gap:6px;padding:6px 12px;
+  border-radius:20px;background:var(--bg-hover);transition:all var(--transition);
+}
+.search-box:focus-within{box-shadow:0 0 0 2px var(--accent-soft)}
+.search-box input{
+  border:none;background:transparent;outline:none;font-size:.75rem;
+  width:120px;color:var(--text-primary);
+}
+.search-box input::placeholder{color:var(--text-tertiary)}
+.search-info{font-size:.7rem;color:var(--text-tertiary);display:none}
+.search-info.show{display:inline}
+
+/* ── Chat ── */
+.chat-msgs{flex:1;min-height:0;overflow-y:auto;padding:4px 0;display:flex;flex-direction:column;gap:8px}
+.chat-msgs::-webkit-scrollbar{width:4px}
+.chat-msgs::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.chat-empty{font-size:.75rem;color:var(--text-tertiary);text-align:center;padding:16px}
+.chat-bubble{
+  max-width:92%;padding:10px 14px;border-radius:var(--radius-md);
+  font-size:.78rem;line-height:1.5;animation:fadeIn .2s ease;
+}
+.chat-bubble.user{align-self:flex-end;background:var(--accent);color:#fff}
+.chat-bubble.ai{align-self:flex-start;background:var(--bg-hover);color:var(--text-primary)}
+.chat-bubble .who{font-size:.65rem;opacity:.7;margin-bottom:2px}
+.chat-input-row{display:flex;gap:8px;margin-top:8px}
+.chat-input-row input{
+  flex:1;padding:9px 14px;border-radius:20px;
+  border:1.5px solid var(--border);background:var(--bg-surface);
+  font-size:.78rem;outline:none;color:var(--text-primary);
+  transition:border var(--transition);
+}
+.chat-input-row input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.chat-input-row input::placeholder{color:var(--text-tertiary)}
+
+/* ── Speaker rename dialog ── */
+.rename-dialog{
+  position:fixed;top:0;left:0;width:100vw;height:100vh;
+  background:rgba(0,0,0,.35);z-index:999;
+  display:flex;align-items:center;justify-content:center;
+  animation:fadeIn .15s ease;
+}
+.rename-dialog .inner{
+  background:var(--bg-elevated);border-radius:var(--radius-lg);
+  padding:24px;min-width:320px;box-shadow:var(--shadow-xl);
+}
+.rename-dialog h3{font-size:.95rem;margin-bottom:16px;color:var(--text-primary)}
+.rename-dialog input{
+  width:100%;padding:10px 14px;border-radius:var(--radius-sm);
+  border:1.5px solid var(--border);font-size:.85rem;
+  outline:none;margin-bottom:16px;background:var(--bg-surface);color:var(--text-primary);
+}
+.rename-dialog input:focus{border-color:var(--accent)}
+.rename-dialog .btns{display:flex;gap:8px;justify-content:flex-end}
+
+/* ── Empty state ── */
+.empty-state{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:40px 20px;color:var(--text-tertiary);text-align:center;gap:8px;
+}
+.empty-state .icon{font-size:2.5rem;opacity:.4;margin-bottom:4px}
+
+/* ── Checkbox ── */
+.check-label{display:flex;align-items:center;gap:6px;font-size:.75rem;color:var(--text-secondary);cursor:pointer}
+.check-label input[type=checkbox]{accent-color:var(--accent);width:14px;height:14px;cursor:pointer}
+.model-select{padding:5px 8px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--bg-surface);font-size:.72rem;color:var(--text-primary);outline:none;cursor:pointer}
+.model-select:focus{border-color:var(--accent)}
+
+/* ── Animations ── */
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+
+/* ── Responsive ── */
+@media (max-width:1024px){
+  .sidebar{display:none}
+  .columns{flex-direction:column}
+  .col-left{width:100%}
+}
+@media (max-width:640px){
+  .topbar{padding:0 12px;gap:6px}
+  .content{padding:12px}
+  .btn{font-size:.72rem;padding:6px 10px}
+}
+</style>
+</head>
+<body data-theme="light">
+
+<div class="app-shell">
+
+  <!-- ═══ SIDEBAR ═══ -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="icon">&#9654;</div>
+      <div>
+        <div class="title">ClipFlow</div>
+        <div class="sub">自动视频剪辑工具</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="nav-item active"><span class="dot" style="background:var(--accent)"></span> 剪辑工作区</a>
+      <a class="nav-item"><span class="dot" style="background:var(--text-tertiary)"></span> 历史记录</a>
+      <a class="nav-item"><span class="dot" style="background:var(--text-tertiary)"></span> 导出管理</a>
+    </nav>
+
+    <div class="sidebar-section">
+      <div class="sidebar-stats">
+        <div style="margin-bottom:2px">当前会话</div>
+        <div class="val" id="sidebarSegTotal">—</div>
+        <div>个文字段落</div>
+      </div>
+      <div class="theme-switcher" id="themeSwitcher">
+        <button class="theme-btn active" data-theme="light">极简白</button>
+        <button class="theme-btn" data-theme="dark">深邃黑</button>
+        <button class="theme-btn" data-theme="warm">阿里橙</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ═══ MAIN ═══ -->
+  <main class="main-area">
+
+    <!-- Top bar -->
+    <header class="topbar" id="topbar">
+      <label class="upload-btn" id="uploadLabel">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        上传视频
+        <input type="file" id="fileInput" accept="video/*" hidden>
+      </label>
+
+      <label class="check-label">
+        <input type="checkbox" id="diarizeCheck"> 说话人分离
+      </label>
+
+      <select id="modelSelect" class="model-select">
+        <option value="tiny">快速模式 (tiny)</option>
+        <option value="medium">高精度 (medium)</option>
+      </select>
+
+      <button id="transcribeBtn" disabled class="btn btn-success">开始转写</button>
+
+      <div class="progress-wrap" id="progressBar"><div class="progress-bar-inner"></div></div>
+
+      <span id="statusText" class="status-pill">准备就绪，请上传视频</span>
+
+      <div class="actions">
+        <span class="seg-badge" id="segCount">已选 <span id="segCountNum">0</span> 段</span>
+        <button id="selectAllBtn" class="btn btn-ghost btn-sm">全选</button>
+        <button id="deselectAllBtn" class="btn btn-ghost btn-sm">取消</button>
+        <button id="exportSrtBtn" disabled class="btn btn-outline btn-sm">SRT 字幕</button>
+        <button id="exportBtn" disabled class="btn btn-primary btn-sm">导出拼接</button>
+        <button id="exportBurnBtn" disabled class="btn btn-primary btn-sm" style="background:var(--orange)">带字幕导出</button>
+        <a id="exportSrtLink" hidden></a>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <div class="content">
+
+      <!-- Two-column layout -->
+      <div class="columns">
+
+        <!-- Left: Video + AI Chat -->
+        <div class="col-left">
+          <!-- Upload mode tabs -->
+          <div class="upload-tabs" id="uploadTabs">
+            <button class="upload-tab active" data-mode="file">本地文件</button>
+            <button class="upload-tab" data-mode="url">视频链接</button>
+          </div>
+          <!-- URL input row (hidden by default) -->
+          <div class="url-input-row" id="urlInputRow" style="display:none">
+            <input id="urlInput" type="text" placeholder="粘贴视频链接（B站 / YouTube / 直链 .mp4 .mov 等）">
+            <button id="urlFetchBtn" class="btn btn-primary btn-sm">获取视频</button>
+          </div>
+          <div class="video-wrapper" id="videoWrapper">
+            <video id="videoPlayer" controls style="display:none"><source src="" type="video/mp4"></video>
+            <label class="upload-placeholder" id="uploadPlaceholder" for="fileInput">
+              <div class="upload-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              </div>
+              <div class="upload-title" id="uploadTitle">点击或拖拽上传视频</div>
+              <div class="upload-hint" id="uploadHint">支持 MP4、MOV、AVI 等常见格式</div>
+            </label>
+          </div>
+          <div class="video-filename" id="videoInfo" style="display:none">
+            <span id="videoFilename"></span>
+            <span id="langTag" style="display:none;margin-left:8px;font-size:.7rem;padding:2px 8px;border-radius:10px;background:var(--bg-hover);color:var(--text-secondary)"></span>
+          </div>
+
+          <!-- AI Chat -->
+          <div id="aiChatPanel" class="card">
+            <div class="card-header">
+              <span>AI 对话剪辑</span>
+              <button id="aiResetBtn" class="btn btn-ghost btn-sm danger">重新开始</button>
+            </div>
+            <div class="card-body">
+              <div class="chat-msgs" id="chatMessages">
+                <div class="chat-empty" id="chatEmpty">请先上传视频并完成转写，然后在这里用大白话告诉 AI 你要剪辑什么内容</div>
+              </div>
+              <div class="chat-input-row">
+                <input id="aiInstruction" type="text" placeholder="例如：只保留讲产品优势的部分">
+                <button id="aiSelectBtn" disabled class="btn btn-primary btn-sm" style="background:var(--purple);border-radius:20px">发送</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Transcript -->
+        <div class="col-right">
+          <div class="card" style="flex:1;display:flex;flex-direction:column;min-height:0">
+            <div class="card-header">
+              <span>文字稿</span>
+              <div style="display:flex;align-items:center;gap:8px">
+                <span class="search-info" id="searchInfo"></span>
+                <div class="search-box">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                  <input id="searchInput" type="text" placeholder="搜索关键词...">
+                </div>
+              </div>
+            </div>
+            <div class="card-body no-pad" style="flex:1;overflow:hidden">
+              <div class="transcript-list" id="transcriptContainer">
+                <div class="empty-state">
+                  <div class="icon">&#127908;</div>
+                  <div>请先上传视频并点击"开始转写"</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// APPLICATION LOGIC (unchanged from original — all APIs preserved)
+// ═══════════════════════════════════════════════════════════════
+
+// ── Theme switcher ──
+document.getElementById('themeSwitcher').addEventListener('click', (e) => {
+  const btn = e.target.closest('.theme-btn');
+  if (!btn) return;
+  document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.body.setAttribute('data-theme', btn.dataset.theme);
+});
+
+// ── State ──
+let videoId = null;
+let segments = [];
+let selectedIds = new Set();
+let videoUrl = null;
+let speakerColors = {};
+let speakerRenames = {};
+let speakerSet = new Set();
+let searchIdx = -1;
+let searchMatches = [];
+let uploadMode = 'file'; // 'file' or 'url'
+
+// ── Upload mode tabs ──
+document.getElementById('uploadTabs').addEventListener('click', (e) => {
+  const tab = e.target.closest('.upload-tab');
+  if (!tab) return;
+  uploadMode = tab.dataset.mode;
+  document.querySelectorAll('.upload-tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  const isUrl = uploadMode === 'url';
+  document.getElementById('urlInputRow').style.display = isUrl ? 'flex' : 'none';
+  document.getElementById('uploadPlaceholder').setAttribute('for', isUrl ? '' : 'fileInput');
+  document.getElementById('uploadTitle').textContent = isUrl ? '粘贴视频链接后点击获取' : '点击或拖拽上传视频';
+  document.getElementById('uploadHint').textContent = isUrl ? '支持 B站、YouTube、直链 .mp4 .mov .avi 等' : '支持 MP4、MOV、AVI 等常见格式';
+});
+
+// ── URL fetch ──
+document.getElementById('urlFetchBtn').addEventListener('click', async () => {
+  const url = document.getElementById('urlInput').value.trim();
+  if (!url) return;
+  statusText.textContent = '正在获取视频链接...';
+  statusText.className = 'status-pill warning';
+  document.getElementById('urlFetchBtn').disabled = true;
+  try {
+    const res = await fetch('/api/upload-url', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url }),
+    });
+    if (!res.ok) throw new Error((await res.json()).error);
+    const data = await res.json();
+    videoId = data.video_id;
+    if (videoUrl) URL.revokeObjectURL(videoUrl);
+    videoUrl = '/api/video/' + videoId;
+    videoPlayer.src = videoUrl;
+    videoPlayer.style.display = 'block';
+    document.getElementById('uploadPlaceholder').style.display = 'none';
+    videoFilename.textContent = data.filename;
+    videoInfo.style.display = '';
+    transcribeBtn.disabled = false;
+    exportBtn.disabled = true;
+    exportBurnBtn.disabled = true;
+    exportSrtBtn.disabled = true;
+    selectedIds.clear();
+    speakerRenames = {};
+    speakerColors = {};
+    speakerSet = new Set();
+    resetChat();
+    renderTranscript();
+    aiSelectBtn.disabled = true;
+    statusText.textContent = '已获取，可开始转写';
+    statusText.className = 'status-pill info';
+  } catch (err) {
+    statusText.textContent = '获取失败: ' + err.message;
+    statusText.className = 'status-pill';
+  } finally {
+    document.getElementById('urlFetchBtn').disabled = false;
+  }
+});
+
+// ── DOM refs ──
+const fileInput = document.getElementById('fileInput');
+const transcribeBtn = document.getElementById('transcribeBtn');
+const diarizeCheck = document.getElementById('diarizeCheck');
+const exportBtn = document.getElementById('exportBtn');
+const exportBurnBtn = document.getElementById('exportBurnBtn');
+const exportSrtBtn = document.getElementById('exportSrtBtn');
+const exportSrtLink = document.getElementById('exportSrtLink');
+const statusText = document.getElementById('statusText');
+const progressBar = document.getElementById('progressBar');
+const videoPlayer = document.getElementById('videoPlayer');
+const videoInfo = document.getElementById('videoInfo');
+const videoFilename = document.getElementById('videoFilename');
+const transcriptContainer = document.getElementById('transcriptContainer');
+const selectAllBtn = document.getElementById('selectAllBtn');
+const deselectAllBtn = document.getElementById('deselectAllBtn');
+const langTag = document.getElementById('langTag');
+const aiChatPanel = document.getElementById('aiChatPanel');
+const aiInstruction = document.getElementById('aiInstruction');
+const aiSelectBtn = document.getElementById('aiSelectBtn');
+const chatMessages = document.getElementById('chatMessages');
+const aiResetBtn = document.getElementById('aiResetBtn');
+const searchInput = document.getElementById('searchInput');
+const searchInfo = document.getElementById('searchInfo');
+
+// ── Speaker color ──
+function getSpkClass(spk) {
+  if (!spk) return '';
+  if (!speakerColors[spk]) {
+    const idx = Object.keys(speakerColors).length % 5;
+    speakerColors[spk] = 'spk-' + idx;
+  }
+  return speakerColors[spk];
+}
+function getSpkDisplay(spk) {
+  if (!spk) return '';
+  return speakerRenames[spk] || spk.replace('SPEAKER_', '说话人');
+}
+
+// ── Upload ──
+fileInput.addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  statusText.textContent = '上传中...';
+  statusText.className = 'status-pill warning';
+  const form = new FormData();
+  form.append('file', file);
+  const res = await fetch('/api/upload', { method: 'POST', body: form });
+  const data = await res.json();
+  videoId = data.video_id;
+  if (videoUrl) URL.revokeObjectURL(videoUrl);
+  videoUrl = URL.createObjectURL(file);
+  videoPlayer.src = videoUrl;
+  videoPlayer.style.display = 'block';
+  document.getElementById('uploadPlaceholder').style.display = 'none';
+  videoFilename.textContent = data.filename;
+  videoInfo.style.display = '';
+  transcribeBtn.disabled = false;
+  exportBtn.disabled = true;
+  exportBurnBtn.disabled = true;
+  exportSrtBtn.disabled = true;
+  selectedIds.clear();
+  speakerRenames = {};
+  speakerColors = {};
+  speakerSet = new Set();
+  resetChat();
+  renderTranscript();
+  aiSelectBtn.disabled = true;
+  statusText.textContent = '已上传，可开启说话人分离后开始转写';
+  statusText.className = 'status-pill info';
+});
+
+// ── Transcribe ──
+transcribeBtn.addEventListener('click', async () => {
+  if (!videoId) return;
+  transcribeBtn.disabled = true;
+  statusText.textContent = '正在转写中，请耐心等待...';
+  statusText.className = 'status-pill warning';
+  progressBar.classList.add('show');
+  progressBar.querySelector('div').style.width = '30%';
+
+  try {
+    const body = { diarization: diarizeCheck.checked, model: document.getElementById('modelSelect').value };
+    const res = await fetch(`/api/transcribe/${videoId}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    if (!res.ok) throw new Error(await res.text());
+    const data = await res.json();
+    progressBar.querySelector('div').style.width = '80%';
+
+    segments = data.segments;
+    speakerSet = new Set();
+    segments.forEach(s => { if (s.speaker) speakerSet.add(s.speaker); });
+    langTag.style.display = '';
+    langTag.textContent = data.language + (data.has_speakers ? ' · ' + speakerSet.size + '位说话人' : '');
+    selectedIds.clear();
+    resetChat();
+    renderTranscript();
+    exportBtn.disabled = false;
+    exportBurnBtn.disabled = false;
+    exportSrtBtn.disabled = false;
+    aiSelectBtn.disabled = false;
+    const chatEmpty = document.getElementById('chatEmpty');
+    if (chatEmpty) chatEmpty.textContent = '在这里用大白话告诉 AI 你要剪辑什么内容';
+    document.getElementById('sidebarSegTotal').textContent = segments.length;
+    statusText.textContent = `转写完成 · ${segments.length} 段`;
+    statusText.className = 'status-pill success';
+  } catch (err) {
+    statusText.textContent = '转写失败: ' + err.message;
+    statusText.className = 'status-pill';
+  } finally {
+    transcribeBtn.disabled = false;
+    progressBar.classList.remove('show');
+  }
+});
+
+// ── Reset chat ──
+function resetChat() {
+  chatMessages.innerHTML = '<div class="chat-empty" id="chatEmpty">请先上传视频并完成转写，然后在这里用大白话告诉 AI 你要剪辑什么内容</div>';
+  aiSelectBtn.disabled = true;
+}
+aiResetBtn.addEventListener('click', async () => {
+  if (!videoId) return;
+  await fetch('/api/select-segments', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ video_id: videoId, instruction: '__reset__', reset: true }),
+  });
+  resetChat();
+  selectedIds.clear();
+  renderTranscript();
+  statusText.textContent = '对话历史已重置';
+  statusText.className = 'status-pill info';
+});
+
+// ── AI Select ──
+aiSelectBtn.addEventListener('click', async () => {
+  const instruction = aiInstruction.value.trim();
+  if (!instruction) return;
+  aiInstruction.value = '';
+  addChatMsg('user', instruction);
+  aiSelectBtn.disabled = true;
+  aiSelectBtn.textContent = '思考中...';
+
+  try {
+    const res = await fetch('/api/select-segments', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ video_id: videoId, instruction }),
+    });
+    if (!res.ok) throw new Error(await res.text());
+    const data = await res.json();
+
+    selectedIds = new Set(data.segment_ids);
+    renderTranscript();
+    const reasonText = data.reasoning || `已匹配 ${data.selected}/${data.total} 段`;
+    addChatMsg('ai', reasonText + `（共${data.selected}段）`);
+    statusText.textContent = `AI 匹配了 ${data.selected} 段`;
+    statusText.className = 'status-pill success';
+  } catch (err) {
+    addChatMsg('ai', '出错: ' + err.message);
+  } finally {
+    aiSelectBtn.disabled = false;
+    aiSelectBtn.textContent = '发送';
+  }
+});
+
+function addChatMsg(role, text) {
+  const div = document.createElement('div');
+  div.className = 'chat-bubble ' + role;
+  const label = role === 'user' ? '你' : 'AI';
+  div.innerHTML = `<div class="who">${label}</div>${escapeHtml(text)}`;
+  // Remove empty state if present
+  const empty = chatMessages.querySelector('.chat-empty');
+  if (empty) empty.remove();
+  chatMessages.appendChild(div);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// ── Export ──
+async function doExport(burn) {
+  if (selectedIds.size === 0) {
+    alert('请先选择至少一个片段');
+    return;
+  }
+  const endpoint = burn ? '/api/export-burn' : '/api/export';
+  statusText.textContent = burn ? '正在剪辑并烧录字幕...' : '正在剪辑拼接...';
+  statusText.className = 'status-pill warning';
+  progressBar.classList.add('show');
+  progressBar.querySelector('div').style.width = '40%';
+  try {
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        video_id: videoId,
+        segment_ids: Array.from(selectedIds).sort((a,b) => a-b),
+      }),
+    });
+    if (!res.ok) throw new Error(await res.text());
+    progressBar.querySelector('div').style.width = '90%';
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = (burn ? 'subtitled_' : 'edited_') + videoId + '.mp4';
+    a.click();
+    URL.revokeObjectURL(url);
+    statusText.textContent = '导出成功';
+    statusText.className = 'status-pill success';
+  } catch (err) {
+    statusText.textContent = '导出失败: ' + err.message;
+    statusText.className = 'status-pill';
+  } finally {
+    progressBar.classList.remove('show');
+  }
+}
+exportBtn.addEventListener('click', () => doExport(false));
+exportBurnBtn.addEventListener('click', () => doExport(true));
+
+// ── Export SRT ──
+exportSrtBtn.addEventListener('click', async () => {
+  const res = await fetch('/api/export-srt/' + videoId);
+  if (!res.ok) { alert('导出失败'); return; }
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'subtitles_' + videoId + '.srt';
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+// ── Transcript rendering ──
+function renderTranscript(filter) {
+  transcriptContainer.innerHTML = '';
+  searchMatches = [];
+  searchIdx = -1;
+
+  if (segments.length === 0) {
+    transcriptContainer.innerHTML = '<div class="empty-state"><div class="icon">&#127908;</div><div>请先上传视频并点击"开始转写"</div></div>';
+    updateCount();
+    return;
+  }
+
+  const keyword = (filter || searchInput.value || '').trim().toLowerCase();
+  segments.forEach((seg) => {
+    const matches = !keyword || seg.text.toLowerCase().includes(keyword);
+    if (keyword && matches) searchMatches.push(seg.id);
+    if (filter && !matches) return;
+
+    const div = document.createElement('div');
+    div.className = 'segment ' +
+      (selectedIds.has(seg.id) ? 'selected' : '') +
+      (keyword && matches ? ' search-hit' : '');
+    div.id = 'seg-' + seg.id;
+
+    let speakerHtml = '';
+    if (seg.speaker) {
+      const spkClass = getSpkClass(seg.speaker);
+      const spkName = getSpkDisplay(seg.speaker);
+      speakerHtml = `<span class="speaker-tag ${spkClass}" data-spk="${seg.speaker}" title="双击改名">${escapeHtml(spkName)}</span>`;
+    }
+
+    div.innerHTML = `
+      <span class="time">${fmtTime(seg.start)}</span>
+      ${speakerHtml}
+      <span class="seg-text">${escapeHtml(seg.text)}</span>
+    `;
+
+    div.addEventListener('click', (e) => {
+      if (e.target.classList.contains('speaker-tag')) return;
+      if (selectedIds.has(seg.id)) selectedIds.delete(seg.id);
+      else selectedIds.add(seg.id);
+      renderTranscript();
+      videoPlayer.currentTime = seg.start;
+    });
+
+    if (seg.speaker) {
+      div.querySelector('.speaker-tag').addEventListener('dblclick', (e) => {
+        e.stopPropagation();
+        const spk = seg.speaker;
+        const newName = prompt('给 "' + getSpkDisplay(spk) + '" 改名为：', speakerRenames[spk] || '');
+        if (newName !== null) {
+          if (newName.trim()) {
+            speakerRenames[spk] = newName.trim();
+          } else {
+            delete speakerRenames[spk];
+          }
+          fetch('/api/rename-speakers', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ video_id: videoId, renames: speakerRenames }),
+          });
+          renderTranscript();
+        }
+      });
+    }
+
+    transcriptContainer.appendChild(div);
+  });
+
+  if (keyword) {
+    searchInfo.textContent = searchMatches.length + ' 条匹配';
+    searchInfo.classList.add('show');
+    if (searchMatches.length > 0) {
+      document.getElementById('seg-' + searchMatches[0]).scrollIntoView({ block: 'center' });
+    }
+  } else {
+    searchInfo.classList.remove('show');
+  }
+
+  updateCount();
+}
+
+// ── Search ──
+let searchTimer;
+searchInput.addEventListener('input', () => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => renderTranscript(), 200);
+});
+searchInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    renderTranscript(searchInput.value);
+    if (searchMatches.length > 0) {
+      searchIdx = 0;
+      videoPlayer.currentTime = segments[searchMatches[0]].start;
+      document.getElementById('seg-' + searchMatches[0]).scrollIntoView({ block: 'center' });
+    }
+  }
+  if (e.key === 'ArrowDown' && searchMatches.length > 0) {
+    e.preventDefault();
+    searchIdx = Math.min(searchIdx + 1, searchMatches.length - 1);
+    const sid = searchMatches[searchIdx];
+    videoPlayer.currentTime = segments[sid].start;
+    document.getElementById('seg-' + sid).scrollIntoView({ block: 'center' });
+  }
+  if (e.key === 'ArrowUp' && searchMatches.length > 0) {
+    e.preventDefault();
+    searchIdx = Math.max(searchIdx - 1, 0);
+    const sid = searchMatches[searchIdx];
+    videoPlayer.currentTime = segments[sid].start;
+    document.getElementById('seg-' + sid).scrollIntoView({ block: 'center' });
+  }
+});
+
+function updateCount() {
+  const cntEl = document.getElementById('segCount');
+  const cntNum = document.getElementById('segCountNum');
+  if (segments.length > 0) {
+    cntEl.classList.add('show');
+    cntNum.textContent = selectedIds.size;
+  } else {
+    cntEl.classList.remove('show');
+  }
+}
+
+function fmtTime(s) {
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  return `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+}
+
+function escapeHtml(text) {
+  const d = document.createElement('div');
+  d.textContent = text;
+  return d.innerHTML;
+}
+
+// ── Select all / deselect ──
+selectAllBtn.addEventListener('click', () => {
+  segments.forEach(s => selectedIds.add(s.id));
+  renderTranscript();
+});
+deselectAllBtn.addEventListener('click', () => {
+  selectedIds.clear();
+  renderTranscript();
+});
+
+// ── Keyboard shortcuts ──
+document.addEventListener('keydown', (e) => {
+  if (e.key === ' ' && document.activeElement === document.body) {
+    e.preventDefault();
+    if (videoPlayer.paused) videoPlayer.play(); else videoPlayer.pause();
+  }
+});
+</script>
+</body>
+</html>
