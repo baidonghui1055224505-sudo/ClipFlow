@@ -145,3 +145,50 @@ ClipFlow/
 ├── start.sh                 # 启动脚本
 └── README.md
 ```
+
+## 常见问题
+
+### Windows 启动报错 `module not found`
+
+```cmd
+pip install -r backend/requirements.txt
+```
+
+### Windows 提示找不到 ffmpeg
+
+1. 从 https://ffmpeg.org/download.html 下载 Windows 版
+2. 解压到 `C:\ffmpeg`
+3. 将 `C:\ffmpeg\bin` 添加到系统 PATH 环境变量
+
+### faster-whisper 安装失败（Windows）
+
+需要 Visual C++ 运行时：
+1. 下载 [VC Redist](https://aka.ms/vs/17/release/vc_redist.x64.exe)
+2. 安装后重启终端再试
+
+### AI 对话点击发送后报错「未配置 API Key」
+
+在 `backend/.env` 中设置：
+```
+DEEPSEEK_API_KEY=sk-xxxxxxxx
+```
+免费获取：https://platform.deepseek.com/api_keys（充值 10 元够用很久）
+
+### 转写速度很慢
+
+- 默认使用 tiny 模型，如果选了 medium 会慢很多
+- Intel Mac 建议保持 tiny 模式
+- 首次运行需下载模型（约 1GB），之后会缓存
+
+### 端口被占用
+
+```cmd
+# Windows: 找到并关闭占用 8000 端口的进程
+netstat -ano | findstr :8000
+taskkill /PID <进程号> /F
+```
+
+```bash
+# macOS: 
+lsof -ti:8000 | xargs kill
+```

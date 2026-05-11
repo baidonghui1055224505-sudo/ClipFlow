@@ -757,6 +757,7 @@ transcribeBtn.addEventListener('click', async () => {
   } catch (err) {
     statusText.textContent = '转写失败: ' + err.message;
     statusText.className = 'status-pill';
+    showError('转写失败: ' + err.message);
   } finally {
     transcribeBtn.disabled = false;
     progressBar.classList.remove('show');
@@ -786,18 +787,27 @@ aiResetBtn.addEventListener('click', async () => {
 aiSelectBtn.addEventListener('click', async () => {
   const instruction = aiInstruction.value.trim();
   if (!instruction) return;
+  if (!videoId) { showError('请先上传并转写视频'); return; }
   aiInstruction.value = '';
   addChatMsg('user', instruction);
   aiSelectBtn.disabled = true;
   aiSelectBtn.textContent = '思考中...';
 
   try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 120000);
     const res = await fetch('/api/select-segments', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ video_id: videoId, instruction }),
+      signal: controller.signal,
     });
-    if (!res.ok) throw new Error(await res.text());
+    clearTimeout(timeout);
+    const contentType = res.headers.get('content-type') || '';
+    if (!res.ok) {
+      const errText = contentType.includes('text/html') ? `服务器错误 (${res.status})` : await res.text();
+      throw new Error(errText);
+    }
     const data = await res.json();
 
     selectedIds = new Set(data.segment_ids);
@@ -807,7 +817,13 @@ aiSelectBtn.addEventListener('click', async () => {
     statusText.textContent = `AI 匹配了 ${data.selected} 段`;
     statusText.className = 'status-pill success';
   } catch (err) {
-    addChatMsg('ai', '出错: ' + err.message);
+    if (err.name === 'AbortError') {
+      addChatMsg('ai', '请求超时，AI 服务响应过慢，请重试');
+    } else {
+      const msg = err.message.includes('DEEPSEEK_API_KEY') ? '未配置 AI API Key，请在 backend/.env 中设置 DEEPSEEK_API_KEY' : err.message;
+      addChatMsg('ai', '出错: ' + msg);
+      showError(msg);
+    }
   } finally {
     aiSelectBtn.disabled = false;
     aiSelectBtn.textContent = '发送';
@@ -1013,6 +1029,19 @@ function escapeHtml(text) {
   const d = document.createElement('div');
   d.textContent = text;
   return d.innerHTML;
+}
+
+function showError(msg) {
+  statusText.textContent = '错误: ' + msg;
+  statusText.className = 'status-pill';
+  statusText.style.background = 'var(--red)';
+  statusText.style.color = '#fff';
+  statusText.style.fontWeight = '700';
+  setTimeout(() => {
+    statusText.style.background = '';
+    statusText.style.color = '';
+    statusText.style.fontWeight = '';
+  }, 5000);
 }
 
 // ── Select all / deselect ──

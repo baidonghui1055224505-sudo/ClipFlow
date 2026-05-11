@@ -24,10 +24,18 @@ def _get_pipeline():
     if _pipeline is None:
         from pyannote.audio import Pipeline
         token = os.environ.get("HF_TOKEN", "")
-        _pipeline = Pipeline.from_pretrained(
-            "pyannote/speaker-diarization-3.1",
-            use_auth_token=token,
-        )
+        try:
+            # huggingface_hub >= 1.0
+            _pipeline = Pipeline.from_pretrained(
+                "pyannote/speaker-diarization-3.1",
+                token=token,
+            )
+        except TypeError:
+            # huggingface_hub < 1.0
+            _pipeline = Pipeline.from_pretrained(
+                "pyannote/speaker-diarization-3.1",
+                use_auth_token=token,
+            )
     return _pipeline
 
 

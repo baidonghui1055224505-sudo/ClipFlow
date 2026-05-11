@@ -112,9 +112,12 @@ def burn_subtitles(video_path: str | Path, segments: list[dict], output_path: st
     with open(srt_path, "w") as f:
         f.write(export_srt(segments))
 
+    # Escape path for FFmpeg subtitles filter: handle Windows drive letter colon
+    escaped = srt_path.replace("\\", "/").replace(":", "\\:")
     output_path = str(output_path)
     _run_ffmpeg(
-        ["-i", str(video_path), "-vf", f"subtitles={srt_path}:force_style='FontSize=24,PrimaryColour=&HFFFFFF,OutlineColour=&H000000,Outline=2'",
+        ["-i", str(video_path), "-vf",
+         f"subtitles={escaped}:force_style='FontSize=24,PrimaryColour=&HFFFFFF,OutlineColour=&H000000,Outline=2'",
          "-c:a", "copy", output_path],
         "burn subtitles",
     )

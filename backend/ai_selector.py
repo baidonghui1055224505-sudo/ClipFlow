@@ -13,8 +13,15 @@ _client: OpenAI | None = None
 def get_client() -> OpenAI:
     global _client
     if _client is None:
+        api_key = os.environ.get("DEEPSEEK_API_KEY", "")
+        if not api_key:
+            raise RuntimeError(
+                "未配置 DEEPSEEK_API_KEY。请在 backend/.env 中设置：\n"
+                "DEEPSEEK_API_KEY=sk-xxxxxxxx\n"
+                "获取地址：https://platform.deepseek.com/api_keys"
+            )
         _client = OpenAI(
-            api_key=os.environ["DEEPSEEK_API_KEY"],
+            api_key=api_key,
             base_url="https://api.deepseek.com",
         )
     return _client
