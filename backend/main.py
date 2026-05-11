@@ -3,7 +3,6 @@ import uuid
 import shutil
 import re
 import urllib.request
-import yt_dlp
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -14,7 +13,21 @@ from fastapi.staticfiles import StaticFiles
 from transcriber import transcribe, preload_model
 from video_processor import extract_audio, cut_segments, concat_clips, export_srt, burn_subtitles, TEMP_DIR
 from ai_selector import select_segments
-from speaker_diarize import preload_pipeline
+
+# Optional dependency: speaker diarization (requires pyannote.audio + torch)
+try:
+    from speaker_diarize import preload_pipeline
+    _HAS_DIARIZE = True
+except ImportError:
+    _HAS_DIARIZE = False
+    def preload_pipeline(): pass
+
+# Optional dependency: platform video download (requires yt-dlp)
+try:
+    import yt_dlp
+    _HAS_YTDLP = True
+except ImportError:
+    _HAS_YTDLP = False
 
 UPLOAD_DIR = TEMP_DIR / "uploads"
 UPLOAD_DIR.mkdir(exist_ok=True)
@@ -34,11 +47,13 @@ def startup():
     except Exception as e:
         print(f"[startup] Whisper preload failed: {e}", file=sys.stderr, flush=True)
 
-    if os.environ.get("HF_TOKEN"):
+    if _HAS_DIARIZE and os.environ.get("HF_TOKEN"):
         try:
             preload_pipeline()
         except Exception as e:
             print(f"[startup] Pyannote preload failed: {e}", file=sys.stderr, flush=True)
+    elif not _HAS_DIARIZE:
+        print("[startup] pyannote not installed, speaker diarization disabled", file=sys.stderr, flush=True)
     else:
         print("[startup] HF_TOKEN not set, skipping pyannote preload", file=sys.stderr, flush=True)
 
@@ -94,6 +109,8 @@ async def upload_video_url(req: dict):
 
     try:
         if is_platform:
+            if not _HAS_YTDLP:
+                return JSONResponse({"error": "Downloading from this platform requires yt-dlp. Run: pip install yt-dlp"}, 400)
             print(f"[upload-url] Downloading platform video {url} with yt-dlp ...", flush=True)
             ydl_opts = {
                 "outtmpl": str(video_path),

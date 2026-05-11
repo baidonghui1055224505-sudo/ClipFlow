@@ -17,9 +17,12 @@
 
 ### 环境要求
 
-- macOS 10.15+
+- **macOS 10.15+** 或 **Windows 10/11**
 - Python 3.9+
 - FFmpeg
+
+> macOS: `brew install ffmpeg`
+> Windows: 从 [ffmpeg.org](https://ffmpeg.org/download.html) 下载，解压后将 `bin` 目录添加到系统 PATH 环境变量
 
 ### 1. 克隆项目
 
@@ -30,13 +33,21 @@ cd ClipFlow
 
 ### 2. 安装依赖
 
+**macOS:**
 ```bash
 pip3 install -r backend/requirements.txt
 ```
 
+**Windows:**
+```cmd
+pip install -r backend/requirements.txt
+```
+
+> 如果 `pyannote.audio` 安装失败，说话人分离功能不可用，但其他功能正常。AI 对话依赖 `openai`，已包含。
+
 ### 3. 配置环境变量
 
-复制 `.env.example` 为 `.env`，填入你的 API Key：
+复制 `backend/.env.example` 为 `backend/.env`，填入你的 API Key：
 
 ```bash
 # backend/.env
@@ -59,13 +70,19 @@ HF_TOKEN=hf-your-huggingface-token  # 可选，说话人分离功能需要
 
 ### 4. 启动服务
 
+**macOS:**
 ```bash
 ./start.sh
 ```
 
+**Windows:**
+```cmd
+双击 start.bat
+```
+
 然后浏览器打开 **http://localhost:8000**
 
-### 5. 开机自启（可选）
+### 5. 开机自启（macOS 可选）
 
 ```bash
 # 编辑 plist 中的路径和 token

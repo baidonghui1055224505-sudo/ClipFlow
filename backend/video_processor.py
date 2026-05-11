@@ -7,8 +7,16 @@ from pathlib import Path
 TEMP_DIR = Path(__file__).parent.parent / "temp"
 TEMP_DIR.mkdir(exist_ok=True)
 
-# Find ffmpeg — try PATH first, then known locations
-_FFMPEG = shutil.which("ffmpeg") or "/usr/local/bin/ffmpeg"
+# Find ffmpeg — try PATH first, then common locations per platform
+import platform
+_FFMPEG = shutil.which("ffmpeg")
+if not _FFMPEG:
+    if platform.system() == "Windows":
+        _FFMPEG = shutil.which("ffmpeg.exe") or r"C:\ffmpeg\bin\ffmpeg.exe"
+    else:
+        _FFMPEG = "/usr/local/bin/ffmpeg"
+if not _FFMPEG or not Path(_FFMPEG).exists():
+    _FFMPEG = "ffmpeg"  # fall back to hoping it's in PATH
 
 
 def _run_ffmpeg(args: list[str], description: str) -> None:
