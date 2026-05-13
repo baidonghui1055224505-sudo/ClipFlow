@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClipFlow 短视频画面包</title>
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   ClipFlow 短视频画面包 — 竖屏 9:16 (1080x1920)
+   用法：浏览器打开 → 滚到对应画面 → 截屏或录屏 → 放进剪辑软件
+   ═══════════════════════════════════════════════════════════════ */
+
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;display:flex;flex-direction:column;align-items:center;gap:40px;padding:40px 0}
+
+.slide{
+  width:540px;height:960px;flex-shrink:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+  border-radius:20px;overflow:hidden;position:relative;
+}
+.slide .label{
+  position:absolute;top:10px;left:12px;font-size:10px;color:rgba(255,255,255,.35);
+  z-index:2;font-weight:600;letter-spacing:.04em;
+}
+
+/* ═══ SLIDE 1: Opening Hook (0-3s) ═══ */
+.s1{background:#0a0a0a}
+.s1 .hook{
+  font-size:46px;font-weight:900;color:#fff;line-height:1.2;letter-spacing:-.02em;
+  animation:fadeUp .6s ease;
+}
+.s1 .hook span{color:#ff6a00}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* ═══ SLIDE 2: Pain Point (3-8s) ═══ */
+.s2{background:#1a1a1a;flex-direction:column;gap:28px}
+.s2 .icon-row{display:flex;gap:16px;align-items:center}
+.s2 .icon-box{
+  width:100px;height:100px;border-radius:20px;display:flex;align-items:center;justify-content:center;
+  font-size:42px;background:#222;
+}
+.s2 .vs{font-size:24px;color:#666;font-weight:300}
+.s2 .pain{font-size:28px;font-weight:800;color:#e53935}
+.s2 .big-x{font-size:120px;color:#e53935;opacity:.7;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}
+
+/* ═══ SLIDE 3: Solution Intro (8-13s) ═══ */
+.s3{background:linear-gradient(135deg,#0f1923 0%,#1a2a3a 100%)}
+.s3 .app-preview{
+  width:480px;height:600px;border-radius:16px;background:#141414;
+  border:1px solid #2a2a2a;display:flex;flex-direction:column;overflow:hidden;
+}
+.s3 .preview-topbar{height:36px;background:#1c1c1e;display:flex;align-items:center;padding:0 14px;gap:8px}
+.s3 .preview-dot{width:8px;height:8px;border-radius:50%}
+.s3 .preview-sidebar{display:flex;flex:1}
+.s3 .preview-left{width:180px;background:#111;border-right:1px solid #222;padding:16px 12px}
+.s3 .preview-right{flex:1;padding:16px;display:flex;flex-direction:column;gap:8px}
+.s3 .preview-line{height:10px;border-radius:4px;background:#222}
+.s3 .preview-line.accent{background:#ff6a00;width:60%}
+.s3 .preview-upload{
+  width:120px;height:32px;border-radius:16px;background:#ff6a00;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;color:#fff;font-weight:700;margin-top:8px;
+}
+.s3 .big-text{font-size:36px;font-weight:800;color:#fff;margin-top:20px}
+.s3 .big-text span{color:#ff6a00}
+
+/* ═══ SLIDE 4: Transcript Magic (13-18s) ═══ */
+.s4{background:#0d1117;flex-direction:column;gap:14px}
+.s4 .ts-line{
+  display:flex;align-items:center;gap:8px;padding:6px 14px;
+  border-radius:6px;background:#161b22;width:460px;
+  font-size:13px;color:#c9d1d9;text-align:left;
+  animation:slideIn .3s ease both;
+}
+.s4 .ts-line .ts-time{font-family:monospace;font-size:11px;color:#58a6ff;min-width:44px}
+.s4 .ts-line.sel{background:#1a2332;border-left:3px solid #ff6a00}
+.s4 .ts-line:nth-child(1){animation-delay:0s}
+.s4 .ts-line:nth-child(2){animation-delay:.2s}
+.s4 .ts-line:nth-child(3){animation-delay:.4s}
+.s4 .ts-line:nth-child(4){animation-delay:.6s}
+.s4 .ts-line:nth-child(5){animation-delay:.8s}
+.s4 .ts-line:nth-child(6){animation-delay:1s}
+@keyframes slideIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
+.s4 .spk-tag{
+  display:inline-block;padding:1px 8px;border-radius:10px;
+  font-size:10px;font-weight:700;flex-shrink:0;
+}
+
+/* ═══ SLIDE 5: AI Input (20-30s) ═══ */
+.s5{background:#0d1117;justify-content:flex-end;padding-bottom:60px}
+.s5 .chat-box{
+  width:460px;background:#161b22;border-radius:16px;padding:14px;
+  border:1px solid #30363d;margin-bottom:12px;
+}
+.s5 .chat-input{
+  width:100%;padding:10px 14px;border-radius:20px;
+  background:#0d1117;border:1.5px solid #ff6a00;
+  color:#e6edf3;font-size:14px;text-align:left;
+  box-shadow:0 0 0 3px rgba(255,106,0,.15);
+}
+.s5 .chat-hint{font-size:12px;color:#8b949e;margin-top:8px}
+
+/* ═══ SLIDE 6: WOW Moment (30-36s) ═══ */
+.s6{background:#0d1117;flex-direction:column;gap:14px}
+.s6 .highlight-badge{
+  padding:8px 20px;border-radius:20px;background:#ff6a00;
+  color:#fff;font-size:14px;font-weight:700;margin-bottom:8px;
+  animation:pulse 1.5s ease infinite;
+}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.s6 .ts-line{display:flex;align-items:center;gap:8px;padding:7px 14px;border-radius:6px;width:460px;font-size:13px;color:#c9d1d9;text-align:left;background:#161b22;transition:all .3s}
+.s6 .ts-line.hit{background:#1a2332;border-left:3px solid #ff6a00;box-shadow:0 0 12px rgba(255,106,0,.2)}
+.s6 .ts-line .ts-time{font-family:monospace;font-size:11px;color:#58a6ff;min-width:44px}
+
+/* ═══ SLIDE 7: Export (42-50s) ═══ */
+.s7{background:#0d1117;gap:20px}
+.s7 .export-cards{display:flex;flex-direction:column;gap:10px;width:400px}
+.s7 .exp-card{
+  display:flex;align-items:center;gap:12px;padding:12px 16px;
+  border-radius:12px;background:#161b22;border:1px solid #30363d;
+  font-size:14px;color:#e6edf3;text-align:left;
+}
+.s7 .exp-card .ec-icon{font-size:20px}
+.s7 .exp-card.go{background:#1a2332;border-color:#ff6a00}
+
+/* ═══ SLIDE 8: Pricing (50-55s) ═══ */
+.s8{background:linear-gradient(135deg,#0a0a0a 0%,#1a1a1a 100%);gap:16px}
+.s8 .price-box{
+  padding:20px 32px;border-radius:16px;background:#161b22;
+  border:1px solid #30363d;text-align:center;
+}
+.s8 .price-box .free{font-size:42px;font-weight:900;color:#4caf50}
+.s8 .price-box .cheap{font-size:18px;color:#8b949e;margin-top:4px}
+.s8 .price-box .yen{font-size:14px;color:#ff6a00;margin-top:2px}
+
+/* ═══ SLIDE 9: CTA GitHub (55-65s) ═══ */
+.s9{background:#0d1117;gap:20px}
+.s9 .gh-card{
+  width:440px;padding:20px;border-radius:14px;background:#161b22;
+  border:1px solid #30363d;text-align:left;
+}
+.s9 .gh-card .repo-name{font-size:18px;font-weight:700;color:#58a6ff}
+.s9 .gh-card .repo-desc{font-size:12px;color:#8b949e;margin:6px 0}
+.s9 .gh-card .repo-readme{font-size:11px;color:#c9d1d9;line-height:1.6;margin-top:8px;padding-top:8px;border-top:1px solid #21262d}
+.s9 .star-btn{
+  display:inline-flex;align-items:center;gap:6px;padding:6px 14px;
+  border-radius:6px;border:1px solid #30363d;font-size:12px;color:#c9d1d9;
+  background:#21262d;margin-top:8px;
+}
+
+/* ═══ SLIDE 10: Outro (65-72s) ═══ */
+.s10{background:#0a0a0a;gap:12px}
+.s10 .final-text{font-size:44px;font-weight:900;color:#fff;line-height:1.2}
+.s10 .final-text span{color:#ff6a00}
+.s10 .brand{font-size:20px;color:#8b949e;margin-top:12px}
+.s10 .name{font-size:16px;color:#666;margin-top:20px}
+
+/* ═══ COVER SLIDES ═══ */
+.cover1{background:linear-gradient(180deg,#0d1117 0%,#0a0a0a 100%)}
+.cover1 .main-text{font-size:38px;font-weight:900;color:#fff;line-height:1.3;max-width:400px}
+.cover1 .main-text span{color:#ff6a00}
+.cover1 .sub-text{font-size:16px;color:#8b949e;margin-top:16px}
+
+/* ═══ LOWER THIRDS (for overlay) ═══ */
+.lower-third{
+  width:540px;height:auto;padding:20px 0;text-align:left;
+  display:flex;flex-direction:column;gap:12px;
+}
+.lt-item{
+  display:inline-block;padding:10px 18px;border-radius:8px;
+  font-size:16px;font-weight:700;color:#fff;
+  backdrop-filter:blur(10px);width:fit-content;
+}
+.lt-orange{background:rgba(255,106,0,.85)}
+.lt-dark{background:rgba(0,0,0,.75)}
+.lt-blue{background:rgba(0,113,227,.8)}
+.lt-green{background:rgba(48,177,88,.85)}
+
+/* ═══ UI SCREENSHOT PLACEHOLDER ═══ */
+.ui-frame{
+  width:480px;height:640px;border-radius:16px;background:#0d1117;
+  border:1px solid #30363d;overflow:hidden;display:flex;flex-direction:column;
+}
+.ui-top{height:40px;background:#161b22;border-bottom:1px solid #21262d;display:flex;align-items:center;padding:0 14px;gap:8px}
+.ui-body{flex:1;display:flex}
+.ui-side{width:160px;background:#0d1117;border-right:1px solid #21262d;padding:14px 10px;display:flex;flex-direction:column;gap:8px}
+.ui-main{flex:1;padding:16px;display:flex;flex-direction:column;gap:8px}
+
+/* ═══ Print / export helper ═══ */
+.toolbar{
+  position:fixed;top:12px;right:16px;z-index:999;
+  display:flex;gap:8px;
+}
+.toolbar button{
+  padding:6px 14px;border-radius:6px;border:none;
+  font-size:12px;font-weight:600;cursor:pointer;
+  background:#333;color:#ddd;
+}
+.toolbar button:hover{background:#555}
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <button onclick="document.querySelectorAll('.label').forEach(e=>e.style.display=e.style.display==='none'?'':'none')">切换时间标签</button>
+</div>
+
+<!-- ═══════════════════════════════════════
+  COVER OPTIONS (3 variants)
+  ═══════════════════════════════════════ -->
+
+<!-- Cover A: 学 PR 三个月 -->
+<div class="slide cover1">
+  <div class="label">封面方案 A</div>
+  <div class="main-text">学 <span style="text-decoration:line-through;color:#666">PR</span> 三个月<br>不如跟 <span>AI</span> 说句话</div>
+  <div class="sub-text">ClipFlow · 自动视频剪辑工具</div>
+</div>
+
+<!-- Cover B: 免费工具 -->
+<div class="slide" style="background:linear-gradient(180deg,#0a0a0a 0%,#1a1208 100%)">
+  <div class="label">封面方案 B</div>
+  <div style="font-size:38px;font-weight:900;color:#fff;line-height:1.3;max-width:400px;text-align:center">
+    我做了一个<br><span style="color:#4caf50">免费</span>工具<br>以后剪视频<br>只需<span style="color:#ff6a00">动嘴</span>
+  </div>
+  <div style="font-size:16px;color:#8b949e;margin-top:20px">ClipFlow · 开源 AI 剪辑</div>
+</div>
+
+<!-- Cover C: 不用学 -->
+<div class="slide" style="background:linear-gradient(180deg,#0d1117 0%,#0a0a0a 100%)">
+  <div class="label">封面方案 C</div>
+  <div style="font-size:44px;font-weight:900;color:#fff;line-height:1.2;text-align:center">
+    剪视频<br><span style="color:#ff6a00">不用学</span><br>AI 全自动
+  </div>
+  <div style="font-size:16px;color:#8b949e;margin-top:20px">ClipFlow · 说人话就能剪辑</div>
+</div>
+
+<!-- ═══════════════════════════════════════
+  MAIN TIMELINE SLIDES
+  ═══════════════════════════════════════ -->
+
+<!-- 0-3s: Hook -->
+<div class="slide s1">
+  <div class="label">0-3s · 开场钩子</div>
+  <div class="hook">剪辑一个<br>30分钟的视频<br>要<span>多久</span>？</div>
+</div>
+
+<!-- 3-8s: Pain point -->
+<div class="slide s2">
+  <div class="label">3-8s · 痛点共鸣</div>
+  <div class="pain" style="margin-bottom:8px">以前你得学 PR、学剪映</div>
+  <div class="pain" style="font-size:22px;font-weight:400;color:#aaa">拖时间轴拖到手抽筋</div>
+  <div style="font-size:80px;margin-top:20px;opacity:.5">🤯</div>
+</div>
+
+<!-- 8-13s: Solution -->
+<div class="slide s3">
+  <div class="label">8-13s · 解决方案</div>
+  <div class="app-preview">
+    <div class="preview-topbar">
+      <div class="preview-dot" style="background:#ff5f57"></div>
+      <div class="preview-dot" style="background:#febc2e"></div>
+      <div class="preview-dot" style="background:#28c840"></div>
+      <div style="font-size:10px;color:#888;margin-left:8px">ClipFlow</div>
+    </div>
+    <div class="preview-sidebar">
+      <div class="preview-left">
+        <div class="preview-line" style="width:60%"></div>
+        <div class="preview-line" style="width:80%"></div>
+        <div class="preview-line" style="width:40%"></div>
+        <div class="preview-line" style="width:70%;margin-top:16px"></div>
+        <div class="preview-line accent" style="width:90%"></div>
+      </div>
+      <div class="preview-right">
+        <div class="preview-line" style="width:90%"></div>
+        <div class="preview-line" style="width:70%"></div>
+        <div class="preview-line" style="width:85%"></div>
+        <div class="preview-line" style="width:60%"></div>
+        <div class="preview-upload">上传视频</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 13-18s: Transcript appearing -->
+<div class="slide s4">
+  <div class="label">13-18s · 文字稿转写</div>
+  <div class="ts-line"><span class="ts-time">00:03</span><span class="spk-tag" style="background:#1d4ed8;color:#dbeafe">主持人</span>欢迎大家收看今天的问题大访谈</div>
+  <div class="ts-line"><span class="ts-time">00:08</span><span class="spk-tag" style="background:#be185d;color:#fce7f3">嘉宾A</span>大家好，今天要聊的话题是...</div>
+  <div class="ts-line"><span class="ts-time">00:15</span><span class="spk-tag" style="background:#1d4ed8;color:#dbeafe">主持人</span>第一个问题，你觉得产品最大的优势是什么</div>
+  <div class="ts-line"><span class="ts-time">00:25</span><span class="spk-tag" style="background:#be185d;color:#fce7f3">嘉宾A</span>我觉得产品的核心竞争力在于...</div>
+  <div class="ts-line"><span class="ts-time">00:38</span><span class="spk-tag" style="background:#1d4ed8;color:#dbeafe">主持人</span>那价格方面呢？用户反馈怎么样</div>
+  <div class="ts-line sel"><span class="ts-time">00:48</span><span class="spk-tag" style="background:#be185d;color:#fce7f3">嘉宾A</span>价格其实很有竞争力，性价比很高</div>
+  <div style="font-size:13px;color:#8b949e;margin-top:4px">↑ 自动识别 2 位说话人，可双击改名</div>
+</div>
+
+<!-- 20-30s: AI Input -->
+<div class="slide s5">
+  <div class="label">20-30s · AI 对话输入</div>
+  <div style="color:#8b949e;font-size:14px;margin-bottom:10px">你不需要学任何剪辑操作</div>
+  <div style="color:#e6edf3;font-size:16px;font-weight:600;margin-bottom:14px">在对话框里说人话就行</div>
+  <div class="chat-box">
+    <div class="chat-input">保留讲产品优势的部分</div>
+    <div class="chat-hint">回车发送 → AI 自动筛选</div>
+  </div>
+</div>
+
+<!-- 30-36s: WOW Moment -->
+<div class="slide s6">
+  <div class="label">30-36s · WOW 时刻（放慢 0.5x）</div>
+  <div class="highlight-badge">AI 自动选中 3 段</div>
+  <div class="ts-line"><span class="ts-time">00:03</span>欢迎大家收看今天的问题大访谈</div>
+  <div class="ts-line hit"><span class="ts-time">00:15</span>第一个问题，你觉得产品最大的优势是什么</div>
+  <div class="ts-line hit"><span class="ts-time">00:25</span>我觉得产品的核心竞争力在于...</div>
+  <div class="ts-line"><span class="ts-time">00:38</span>那价格方面呢？用户反馈怎么样</div>
+  <div class="ts-line hit"><span class="ts-time">00:48</span>价格其实很有竞争力，性价比很高</div>
+  <div style="font-size:14px;color:#ff6a00;margin-top:8px;font-weight:600">不是关键词匹配，AI 真正理解了语义</div>
+</div>
+
+<!-- 36-42s: Multi-round dialogue -->
+<div class="slide" style="background:#0d1117;gap:10px;justify-content:flex-end;padding-bottom:50px">
+  <div class="label">36-42s · 多轮对话</div>
+  <div style="display:flex;flex-direction:column;gap:6px;width:460px;align-items:flex-end;margin-bottom:4px">
+    <div style="padding:8px 14px;border-radius:14px;background:#ff6a00;color:#fff;font-size:13px;max-width:300px">保留讲产品优势的部分</div>
+    <div style="padding:8px 14px;border-radius:14px;background:#161b22;color:#c9d1d9;font-size:13px;max-width:380px;align-self:flex-start">已选中 3 段产品相关段落</div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:6px;width:460px;align-items:flex-end">
+    <div style="padding:8px 14px;border-radius:14px;background:#ff6a00;color:#fff;font-size:13px;max-width:300px">把价格相关的去掉</div>
+    <div style="padding:8px 14px;border-radius:14px;background:#161b22;color:#c9d1d9;font-size:13px;max-width:380px;align-self:flex-start">已移除 1 段，剩余 2 段</div>
+  </div>
+  <div style="font-size:13px;color:#58a6ff;margin-top:4px">← 多轮对话，越来越精准</div>
+</div>
+
+<!-- 42-50s: Export -->
+<div class="slide s7">
+  <div class="label">42-50s · 导出</div>
+  <div style="font-size:22px;font-weight:700;color:#e6edf3;margin-bottom:8px">一键导出三种方式</div>
+  <div class="export-cards">
+    <div class="exp-card go"><span class="ec-icon">🎬</span> 拼接导出（MP4）</div>
+    <div class="exp-card"><span class="ec-icon">📝</span> 带字幕烧录导出</div>
+    <div class="exp-card"><span class="ec-icon">📄</span> SRT 字幕文件（给 PR/FCPX 用）</div>
+  </div>
+</div>
+
+<!-- 50-55s: Pricing -->
+<div class="slide s8">
+  <div class="label">50-55s · 费用说明</div>
+  <div class="price-box">
+    <div class="free">免费</div>
+    <div class="cheap" style="font-size:13px">语音识别 · 本地运行 · 不花一分钱</div>
+  </div>
+  <div class="price-box" style="border-color:#ff6a00">
+    <div style="font-size:18px;color:#ff6a00;font-weight:700">AI 对话剪辑</div>
+    <div class="yen">一次 <span style="font-size:28px;font-weight:900;color:#fff">几分钱</span> · 充 10 元用几个月</div>
+  </div>
+</div>
+
+<!-- 55-65s: CTA GitHub -->
+<div class="slide s9">
+  <div class="label">55-65s · GitHub 引导</div>
+  <div class="gh-card">
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+      <span style="font-size:16px">📁</span>
+      <span class="repo-name">baidonghui1055224505-sudo / ClipFlow</span>
+    </div>
+    <div class="repo-desc">基于 AI 语音识别与自然语言理解的视频自动剪辑工具</div>
+    <div class="repo-readme">
+      ⭐ 开源免费 · Python + FFmpeg<br>
+      🎬 支持 B站 / YouTube 链接<br>
+      🗣️ 99 种语言 · 说话人分离 · AI 对话剪辑
+    </div>
+    <div class="star-btn">⭐ Star &nbsp;|&nbsp; 🍴 Fork</div>
+  </div>
+  <div style="font-size:14px;color:#e6edf3;font-weight:600">GitHub 搜 <span style="color:#58a6ff">ClipFlow</span></div>
+</div>
+
+<!-- 65-72s: Outro -->
+<div class="slide s10">
+  <div class="label">65-72s · 结尾</div>
+  <div class="final-text">让剪辑<br>变成<span>对话</span></div>
+  <div class="brand">ClipFlow · 自动视频剪辑工具</div>
+  <div class="name">我是百东辉，关注我，后面还会分享更多 AI 工具</div>
+</div>
+
+<!-- ═══════════════════════════════════════
+  LOWER THIRDS / TEXT OVERLAYS
+  ═══════════════════════════════════════ -->
+
+<!-- Lower third: 本地免费 + AI 一次几分钱 -->
+<div class="slide" style="background:#0a0a0a;justify-content:center">
+  <div class="label">叠加字卡 · 费用</div>
+  <div style="text-align:center">
+    <div style="padding:16px 32px;border-radius:14px;background:rgba(0,0,0,.8);display:inline-block;margin-bottom:16px">
+      <div style="font-size:18px;color:#4caf50;font-weight:700">本地语音识别 · 完全免费</div>
+    </div>
+    <br>
+    <div style="padding:16px 32px;border-radius:14px;background:rgba(255,106,0,.9);display:inline-block">
+      <div style="font-size:18px;color:#fff;font-weight:700">AI 对话剪辑 · 一次几分钱</div>
+    </div>
+  </div>
+</div>
+
+<!-- Lower third: 让剪辑变成对话 -->
+<div class="slide" style="background:#0a0a0a;justify-content:center">
+  <div class="label">叠加字卡 · 结尾</div>
+  <div style="padding:20px 40px;border-radius:16px;background:linear-gradient(135deg,rgba(255,106,0,.9),rgba(124,92,224,.9))">
+    <div style="font-size:38px;font-weight:900;color:#fff">让剪辑变成对话</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+  TRANSITION CARDS
+  ═══════════════════════════════════════ -->
+
+<!-- Transition: 疑问 → 解答 -->
+<div class="slide" style="background:#0a0a0a">
+  <div class="label">转场 · 疑问引解答</div>
+  <div style="font-size:18px;color:#8b949e;margin-bottom:12px">要不要花钱？</div>
+  <div style="font-size:32px;font-weight:800;color:#fff">答案是——</div>
+</div>
+
+</body>
+</html>
