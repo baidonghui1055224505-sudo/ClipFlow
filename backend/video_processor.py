@@ -107,10 +107,22 @@ def _srt_time(seconds: float) -> str:
 
 
 def burn_subtitles(video_path: str | Path, segments: list[dict], output_path: str | Path) -> str:
-    """Burn subtitles into video using FFmpeg drawtext filter."""
+    """Burn subtitles into video using FFmpeg subtitles filter.
+
+    Timestamps are recalculated relative to the concatenated video:
+    segments are assumed to be placed sequentially starting at 00:00.
+    """
+    # Recalculate timestamps for the concatenated video
+    adjusted = []
+    offset = 0.0
+    for seg in segments:
+        dur = seg["end"] - seg["start"]
+        adjusted.append({**seg, "start": round(offset, 2), "end": round(offset + dur, 2)})
+        offset += dur
+
     srt_path = str(TEMP_DIR / f"subs_{uuid.uuid4().hex[:8]}.srt")
     with open(srt_path, "w") as f:
-        f.write(export_srt(segments))
+        f.write(export_srt(adjusted))
 
     # Escape path for FFmpeg subtitles filter: handle Windows drive letter colon
     escaped = srt_path.replace("\\", "/").replace(":", "\\:")

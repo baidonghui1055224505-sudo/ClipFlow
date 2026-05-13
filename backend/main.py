@@ -266,13 +266,20 @@ def export_video(req: dict):
                         filename=f"edited_{video_id}.mp4")
 
 
-@app.get("/api/export-srt/{video_id}")
-def export_srt_endpoint(video_id: str):
+@app.post("/api/export-srt")
+def export_srt_endpoint(req: dict):
+    video_id = req["video_id"]
+    segment_ids: list[int] = req.get("segment_ids", [])
+
     session = sessions.get(video_id)
     if not session or not session.get("transcript"):
         return JSONResponse({"error": "Session not found or not transcribed"}, 400)
 
-    segments = session["transcript"]["segments"]
+    all_segments = session["transcript"]["segments"]
+    segments = [all_segments[i] for i in segment_ids if i < len(all_segments)]
+    if not segments:
+        return JSONResponse({"error": "No segments selected"}, 400)
+
     # Apply speaker renames if any
     renames = session.get("speaker_renames", {})
     for seg in segments:
