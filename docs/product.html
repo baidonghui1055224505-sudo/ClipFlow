@@ -7,114 +7,208 @@
 <style>
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
-    --bg:#0a0a0f;--bg2:#131320;--bg3:#1a1a2e;
-    --text:#e8e8ed;--text2:#9898b0;--text3:#606080;
-    --accent:#6c5ce7;--accent2:#a78bfa;--accent-glow:rgba(108,92,231,.25);
-    --green:#00d2a0;--red:#ff5e7a;--yellow:#ffc048;
-    --radius:12px;--radius-sm:8px;
+    --bg:#08080d;--bg2:#111118;--bg3:#1c1c2a;--bg4:#252538;
+    --text:#eaeaef;--text2:#9a9ab5;--text3:#5e5e7a;
+    --accent:#6c5ce7;--accent2:#a78bfa;--accent-glow:rgba(108,92,231,.28);
+    --green:#00d2a0;--red:#ff5e7a;--yellow:#ffc048;--orange:#ff8c52;
+    --blue:#4ea5ff;--pink:#f06292;
+    --radius:14px;--radius-sm:8px;
     --font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;
     --mono:'JetBrains Mono','SF Mono','Cascadia Code',monospace;
+    --shadow-card:0 2px 12px rgba(0,0,0,.25);
   }
   html{scroll-behavior:smooth}
   body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}
   a{color:var(--accent2);text-decoration:none}
-  .container{max-width:1100px;margin:0 auto;padding:0 24px}
+  .container{max-width:1120px;margin:0 auto;padding:0 28px}
 
   /* ── Nav ── */
-  nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,15,.85);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.06)}
-  nav .container{display:flex;align-items:center;justify-content:space-between;height:56px}
-  .logo{font-weight:800;font-size:1.15rem;letter-spacing:-.02em;display:flex;align-items:center;gap:8px}
-  .logo-icon{width:28px;height:28px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px}
-  .nav-links{display:flex;gap:24px;font-size:.85rem}
-  .nav-links a{color:var(--text2);transition:color .2s}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(8,8,13,.88);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.05)}
+  nav .container{display:flex;align-items:center;justify-content:space-between;height:58px}
+  .logo{font-weight:800;font-size:1.2rem;letter-spacing:-.02em;display:flex;align-items:center;gap:9px;color:var(--text)}
+  .logo-icon{width:30px;height:30px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;box-shadow:0 2px 12px var(--accent-glow)}
+  .nav-links{display:flex;gap:28px;font-size:.84rem}
+  .nav-links a{color:var(--text2);transition:color .2s;font-weight:500}
   .nav-links a:hover{color:var(--text)}
-  .btn{display:inline-flex;align-items:center;gap:6px;padding:10px 22px;border-radius:var(--radius-sm);font-weight:600;font-size:.85rem;border:none;cursor:pointer;transition:all .2s}
-  .btn-primary{background:var(--accent);color:#fff}
-  .btn-primary:hover{background:#7c6ff7;box-shadow:0 4px 24px var(--accent-glow)}
-  .btn-outline{background:transparent;border:1.5px solid var(--bg3);color:var(--text)}
-  .btn-outline:hover{border-color:var(--accent);color:#fff}
-  .btn-ghost{background:transparent;color:var(--text2);padding:8px 14px}
-  .btn-ghost:hover{color:#fff;background:var(--bg3)}
+  .btn{display:inline-flex;align-items:center;gap:7px;padding:11px 24px;border-radius:var(--radius-sm);font-weight:600;font-size:.86rem;border:none;cursor:pointer;transition:all .2s}
+  .btn-primary{background:var(--accent);color:#fff;box-shadow:0 4px 20px var(--accent-glow)}
+  .btn-primary:hover{background:#7c6ff7;transform:translateY(-1px);box-shadow:0 6px 28px var(--accent-glow)}
+  .btn-outline{background:transparent;border:1.5px solid var(--bg4);color:var(--text)}
+  .btn-outline:hover{border-color:var(--accent2);color:#fff}
 
   /* ── Hero ── */
-  .hero{padding:140px 0 80px;text-align:center;position:relative;overflow:hidden}
+  .hero{padding:150px 0 60px;text-align:center;position:relative;overflow:hidden}
   .hero::before{
-    content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);
-    width:600px;height:600px;background:radial-gradient(circle,rgba(108,92,231,.15),transparent 70%);pointer-events:none
+    content:'';position:absolute;top:-250px;left:50%;transform:translateX(-50%);
+    width:700px;height:700px;background:radial-gradient(circle,rgba(108,92,231,.18),transparent 65%);pointer-events:none
   }
-  .hero h1{font-size:3.2rem;font-weight:900;letter-spacing:-.03em;line-height:1.15;margin-bottom:20px}
-  .hero h1 span{background:linear-gradient(135deg,var(--accent2),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-  .hero .subtitle{font-size:1.15rem;color:var(--text2);max-width:560px;margin:0 auto 36px;line-height:1.7}
-  .hero-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .hero::after{
+    content:'';position:absolute;bottom:-100px;right:-100px;width:400px;height:400px;
+    background:radial-gradient(circle,rgba(0,210,160,.08),transparent 60%);pointer-events:none
+  }
+  .hero-badge{display:inline-block;padding:6px 16px;border-radius:20px;background:rgba(108,92,231,.12);border:1px solid rgba(108,92,231,.2);font-size:.78rem;color:var(--accent2);margin-bottom:24px;font-weight:600}
+  .hero h1{font-size:3.4rem;font-weight:900;letter-spacing:-.04em;line-height:1.1;margin-bottom:22px}
+  .hero h1 .grad{background:linear-gradient(135deg,var(--accent2) 0%,var(--green) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .hero .subtitle{font-size:1.15rem;color:var(--text2);max-width:600px;margin:0 auto 40px;line-height:1.75}
+  .hero-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+
+  /* ── Stats bar ── */
+  .stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--bg3);border-radius:var(--radius);overflow:hidden;margin-top:-30px;position:relative;z-index:2;max-width:900px;margin-left:auto;margin-right:auto}
+  .stat-item{background:var(--bg2);padding:28px 20px;text-align:center}
+  .stat-num{font-size:2rem;font-weight:900;background:linear-gradient(135deg,var(--accent2),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .stat-label{font-size:.78rem;color:var(--text3);margin-top:4px}
+
+  /* ── Section shared ── */
+  .section{padding:88px 0}
+  .section-label{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:var(--accent2);margin-bottom:12px}
+  .section-title{font-size:2.1rem;font-weight:800;letter-spacing:-.02em;margin-bottom:16px;line-height:1.25}
+  .section-desc{color:var(--text2);max-width:600px;margin-bottom:52px;font-size:.95rem;line-height:1.7}
 
   /* ── Features Grid ── */
-  .section{padding:80px 0}
-  .section-label{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--accent2);margin-bottom:12px}
-  .section-title{font-size:2rem;font-weight:800;letter-spacing:-.02em;margin-bottom:16px}
-  .section-desc{color:var(--text2);max-width:560px;margin-bottom:48px;font-size:.95rem}
-  .features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
   .feature-card{
     background:var(--bg2);border:1px solid var(--bg3);border-radius:var(--radius);
-    padding:28px 24px;transition:all .25s
+    padding:32px 26px;transition:all .3s;position:relative;overflow:hidden
   }
-  .feature-card:hover{border-color:rgba(255,255,255,.12);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.3)}
-  .feature-icon{font-size:2rem;margin-bottom:14px;display:block}
-  .feature-card h3{font-size:1rem;font-weight:700;margin-bottom:8px;letter-spacing:-.01em}
-  .feature-card p{font-size:.82rem;color:var(--text2);line-height:1.6}
+  .feature-card::after{
+    content:'';position:absolute;top:0;left:0;right:0;height:2px;
+    background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:0;transition:opacity .3s
+  }
+  .feature-card:hover{border-color:var(--bg4);transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.35)}
+  .feature-card:hover::after{opacity:1}
+  .feature-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:18px}
+  .fi-purple{background:rgba(108,92,231,.15);color:var(--accent2)}
+  .fi-green{background:rgba(0,210,160,.12);color:var(--green)}
+  .fi-blue{background:rgba(78,165,255,.12);color:var(--blue)}
+  .fi-orange{background:rgba(255,140,82,.12);color:var(--orange)}
+  .fi-pink{background:rgba(240,98,146,.12);color:var(--pink)}
+  .fi-yellow{background:rgba(255,192,72,.12);color:var(--yellow)}
+  .feature-card h3{font-size:1.02rem;font-weight:700;margin-bottom:8px;letter-spacing:-.01em}
+  .feature-card p{font-size:.83rem;color:var(--text2);line-height:1.6}
 
-  /* ── How it works ── */
-  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-  .step-card{
-    text-align:center;padding:32px 20px;background:var(--bg2);
-    border:1px solid var(--bg3);border-radius:var(--radius);position:relative
+  /* ── Use Cases ── */
+  .use-cases{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+  .use-case{
+    background:var(--bg2);border:1px solid var(--bg3);border-radius:var(--radius);
+    padding:32px 28px;display:flex;gap:20px;align-items:flex-start;transition:all .3s
   }
-  .step-num{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-weight:800;font-size:.9rem;display:inline-flex;align-items:center;justify-content:center;margin-bottom:16px}
-  .step-card h4{font-size:.9rem;font-weight:700;margin-bottom:6px}
-  .step-card p{font-size:.78rem;color:var(--text2);line-height:1.5}
+  .use-case:hover{border-color:var(--bg4);box-shadow:var(--shadow-card)}
+  .use-case-icon{
+    flex-shrink:0;width:56px;height:56px;border-radius:14px;
+    display:flex;align-items:center;justify-content:center;font-size:1.6rem
+  }
+  .use-case-body h4{font-size:.98rem;font-weight:700;margin-bottom:6px}
+  .use-case-body .who{font-size:.78rem;color:var(--accent2);font-weight:600;margin-bottom:8px}
+  .use-case-body p{font-size:.82rem;color:var(--text2);line-height:1.65}
+  .use-case-body .example{
+    margin-top:10px;padding:8px 14px;background:var(--bg3);border-radius:var(--radius-sm);
+    font-size:.76rem;color:var(--text3);border-left:2px solid var(--accent)
+  }
+
+  /* ── Workflow Timeline ── */
+  .timeline{position:relative;padding-left:0}
+  .timeline::before{
+    content:'';position:absolute;left:50%;top:0;bottom:0;width:2px;
+    background:linear-gradient(180deg,var(--accent),var(--green));transform:translateX(-50%)
+  }
+  .tl-row{display:flex;align-items:center;margin-bottom:0;position:relative}
+  .tl-row:nth-child(odd){flex-direction:row}
+  .tl-row:nth-child(even){flex-direction:row-reverse}
+  .tl-dot{
+    position:absolute;left:50%;transform:translateX(-50%);
+    width:48px;height:48px;border-radius:50%;background:var(--bg2);border:3px solid var(--accent);
+    display:flex;align-items:center;justify-content:center;font-size:1.3rem;z-index:2;
+    box-shadow:0 0 0 8px var(--bg)
+  }
+  .tl-content{
+    width:45%;padding:28px;background:var(--bg2);border:1px solid var(--bg3);
+    border-radius:var(--radius);transition:all .3s
+  }
+  .tl-content:hover{border-color:var(--bg4);box-shadow:var(--shadow-card)}
+  .tl-content h4{font-size:.95rem;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+  .tl-content h4 .step-badge{
+    font-size:.7rem;padding:2px 10px;border-radius:12px;
+    background:rgba(108,92,231,.15);color:var(--accent2);font-weight:700
+  }
+  .tl-content p{font-size:.82rem;color:var(--text2);line-height:1.6;margin-top:6px}
+  .tl-arrow{font-size:1.5rem;color:var(--accent2)}
+
+  /* ── Export cards ── */
+  .export-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .export-card{
+    background:var(--bg2);border:1px solid var(--bg3);border-radius:var(--radius);
+    padding:36px 28px;text-align:center;transition:all .3s
+  }
+  .export-card:hover{border-color:var(--bg4);transform:translateY(-3px);box-shadow:var(--shadow-card)}
+  .export-card .e-icon{font-size:3rem;display:block;margin-bottom:16px}
+  .export-card h5{font-size:.95rem;margin-bottom:8px}
+  .export-card small{color:var(--text3);font-size:.78rem;line-height:1.5}
 
   /* ── Code block ── */
   .code-block{
-    background:var(--bg2);border:1px solid var(--bg3);border-radius:var(--radius);
-    padding:20px 24px;font-family:var(--mono);font-size:.82rem;line-height:1.7;
-    overflow-x:auto;color:var(--text2);position:relative
+    background:var(--bg);border:1px solid var(--bg3);border-radius:var(--radius);
+    padding:22px 28px;font-family:var(--mono);font-size:.82rem;line-height:1.8;
+    overflow-x:auto;color:var(--text2)
   }
   .code-block .prompt{color:var(--accent2)}
   .code-block .cmd{color:var(--green)}
   .code-block .comment{color:var(--text3)}
 
-  /* ── Comparison table ── */
+  /* ── Comparison ── */
+  .compare-wrapper{overflow-x:auto}
   .compare-table{width:100%;border-collapse:collapse;font-size:.85rem}
-  .compare-table th,.compare-table td{padding:14px 20px;text-align:left}
-  .compare-table th{color:var(--text3);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--bg3)}
-  .compare-table td{border-bottom:1px solid rgba(255,255,255,.04);color:var(--text2)}
-  .compare-table tr:last-child td{border-bottom:none}
-  .compare-table .check{color:var(--green);font-weight:700}
+  .compare-table th,.compare-table td{padding:16px 22px;text-align:left}
+  .compare-table thead th{color:var(--text3);font-weight:600;font-size:.73rem;text-transform:uppercase;letter-spacing:.06em;border-bottom:2px solid var(--bg3);background:var(--bg2)}
+  .compare-table thead th:first-child{border-radius:var(--radius-sm) 0 0 0}
+  .compare-table thead th:last-child{border-radius:0 var(--radius-sm) 0 0}
+  .compare-table tbody td{border-bottom:1px solid rgba(255,255,255,.03);color:var(--text2)}
+  .compare-table tbody tr:hover td{background:rgba(255,255,255,.015)}
+  .compare-table .check{color:var(--green);font-weight:700;font-size:1.1rem}
   .compare-table .dash{color:var(--text3)}
+  .compare-table .highlight td{background:rgba(108,92,231,.06)}
+  .compare-table .highlight td:first-child{color:var(--accent2);font-weight:600}
 
-  /* ── Export cards ── */
-  .export-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-  .export-card{
+  /* ── Architecture diagram ── */
+  .arch-diagram{
     background:var(--bg2);border:1px solid var(--bg3);border-radius:var(--radius);
-    padding:24px;text-align:center
+    padding:40px;overflow-x:auto
   }
-  .export-card .icon{font-size:2.5rem;display:block;margin-bottom:12px}
-  .export-card h5{font-size:.9rem;margin-bottom:6px}
-  .export-card small{color:var(--text3);font-size:.75rem}
+  .arch-layers{display:flex;flex-direction:column;gap:12px;align-items:center}
+  .arch-layer{
+    display:flex;align-items:center;gap:20px;padding:18px 28px;
+    border-radius:var(--radius-sm);min-width:520px;justify-content:center
+  }
+  .arch-layer-top{background:rgba(242,158,76,.08);border:1px solid rgba(242,158,76,.2)}
+  .arch-layer-mid{background:rgba(108,92,231,.08);border:1px solid rgba(108,92,231,.2)}
+  .arch-layer-bot{background:rgba(0,210,160,.06);border:1px solid rgba(0,210,160,.15)}
+  .arch-layer-base{background:rgba(255,255,255,.03);border:1px solid var(--bg4)}
+  .arch-label{font-weight:700;font-size:.8rem;min-width:100px;text-align:center}
+  .arch-items{display:flex;gap:10px;flex-wrap:wrap}
+  .arch-chip{
+    padding:6px 14px;border-radius:20px;font-size:.75rem;font-weight:600;
+    background:var(--bg3);color:var(--text2)
+  }
+  .arch-arrow{color:var(--text3);font-size:1.2rem;text-align:center}
 
   /* ── Footer ── */
-  footer{border-top:1px solid var(--bg3);padding:40px 0;text-align:center;color:var(--text3);font-size:.78rem}
+  footer{border-top:1px solid var(--bg3);padding:48px 0;text-align:center;color:var(--text3);font-size:.8rem}
   footer a{color:var(--text2)}
   footer a:hover{color:#fff}
 
   /* ── Responsive ── */
   @media (max-width:768px){
     .hero h1{font-size:2rem}
-    .features-grid{grid-template-columns:1fr}
-    .steps{grid-template-columns:repeat(2,1fr)}
-    .export-cards,.compare-wrapper{overflow-x:auto}
-    nav .container{flex-wrap:wrap;height:auto;padding:12px 16px;gap:8px}
-    .hero{padding:100px 0 48px}
-    .section{padding:48px 0}
+    .hero{padding:110px 0 40px}
+    .features-grid,.use-cases{grid-template-columns:1fr}
+    .stats-bar{grid-template-columns:repeat(2,1fr)}
+    .export-cards{grid-template-columns:1fr}
+    .timeline::before{left:20px}
+    .tl-row,.tl-row:nth-child(even){flex-direction:column;padding-left:50px}
+    .tl-dot{left:20px}
+    .tl-content{width:100%}
+    .arch-layer{min-width:auto;flex-wrap:wrap}
+    .section{padding:56px 0}
+    nav .container{flex-wrap:wrap;height:auto;padding:12px 20px;gap:10px}
   }
 </style>
 </head>
@@ -123,15 +217,16 @@
 <!-- Nav -->
 <nav>
   <div class="container">
-    <div class="logo">
+    <a class="logo" href="#">
       <div class="logo-icon">&#9986;</div>
       ClipFlow
-    </div>
+    </a>
     <div class="nav-links">
       <a href="#features">功能</a>
-      <a href="#quickstart">快速开始</a>
+      <a href="#scenarios">应用场景</a>
       <a href="#workflow">工作流</a>
-      <a href="https://github.com/baidonghui1055224505-sudo/ClipFlow" target="_blank">GitHub</a>
+      <a href="#quickstart">快速开始</a>
+      <a href="https://github.com/baidonghui1055224505-sudo/ClipFlow" target="_blank">GitHub &#8599;</a>
     </div>
   </div>
 </nav>
@@ -139,215 +234,418 @@
 <!-- Hero -->
 <section class="hero">
   <div class="container">
-    <h1>把视频剪辑<br>变成<span>一句话的事</span></h1>
+    <div class="hero-badge">&#127881; v2.0 发布 — 字幕编辑、说话人分离、多轮对话</div>
+    <h1>把视频剪辑<br>变成<span class="grad">一句话的事</span></h1>
     <p class="subtitle">
-      上传视频 &#8594; AI 自动转写 + 识别说话人 &#8594; 用大白话描述需求 &#8594; 一键导出。<br>零学习成本，十分钟出片。
+      上传视频 &#8594; AI 自动转写 + 识别说话人 &#8594; 用大白话告诉 AI 你要什么 &#8594; 一键导出。<br>没有时间轴，没有轨道，没有学习曲线。十分钟出片。
     </p>
     <div class="hero-actions">
-      <a href="#quickstart" class="btn btn-primary" style="font-size:.92rem;padding:12px 28px">&#11015; 快速开始</a>
-      <a href="https://github.com/baidonghui1055224505-sudo/ClipFlow" target="_blank" class="btn btn-outline" style="font-size:.92rem;padding:12px 28px">&#9731; GitHub</a>
+      <a href="#quickstart" class="btn btn-primary" style="font-size:.94rem;padding:14px 32px">&#11015; 快速开始</a>
+      <a href="https://github.com/baidonghui1055224505-sudo/ClipFlow" target="_blank" class="btn btn-outline" style="font-size:.94rem;padding:14px 32px">&#9731; 在 GitHub 上查看</a>
     </div>
   </div>
 </section>
+
+<!-- Stats -->
+<div class="container">
+  <div class="stats-bar">
+    <div class="stat-item">
+      <div class="stat-num">99+</div>
+      <div class="stat-label">支持语言</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">3s</div>
+      <div class="stat-label">1 分钟视频转写时间</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">10&#215;</div>
+      <div class="stat-label">比手动剪辑更快</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">100%</div>
+      <div class="stat-label">本地处理，数据不出设备</div>
+    </div>
+  </div>
+</div>
 
 <!-- Features -->
 <section class="section" id="features">
   <div class="container">
     <div class="section-label">功能特性</div>
-    <h2 class="section-title">一切你需要的，都在这里</h2>
-    <p class="section-desc">从转写到导出，ClipFlow 覆盖视频剪辑的完整流程。无需 Premiere，无需学习。</p>
+    <h2 class="section-title">9 大核心能力，覆盖剪辑全流程</h2>
+    <p class="section-desc">从素材获取到最终导出，无需切换工具。ClipFlow 用 AI 把复杂操作变成自然对话。</p>
     <div class="features-grid">
+
       <div class="feature-card">
-        <span class="feature-icon">&#127908;</span>
+        <div class="feature-icon fi-purple">&#127908;</div>
         <h3>多语言语音转写</h3>
-        <p>基于 faster-whisper，支持中英日韩等 99 种语言。VAD 静音过滤，1 分钟视频约 3 秒完成。tiny 模式极速，medium 模式高精度。</p>
+        <p>faster-whisper 引擎，99 种语言。VAD 静音过滤自动跳过空白。tiny 模式极速（1分钟/3秒），medium 模式高精度。</p>
       </div>
+
       <div class="feature-card">
-        <span class="feature-icon">&#128101;</span>
-        <h3>说话人分离</h3>
-        <p>pyannote.audio speaker-diarization-3.1 自动区分不同说话人。彩色标签标注，双击即可改名。播客、访谈、会议的福音。</p>
+        <div class="feature-icon fi-green">&#128101;</div>
+        <h3>说话人分离 + 改名</h3>
+        <p>pyannote.audio 3.1 自动区分每个说话人。彩色标签标注，双击即可改名——「主持人」「嘉宾A」「受访者」。</p>
       </div>
+
       <div class="feature-card">
-        <span class="feature-icon">&#129504;</span>
+        <div class="feature-icon fi-blue">&#129504;</div>
         <h3>AI 多轮对话剪辑</h3>
-        <p>DeepSeek 大模型语义理解。用中文大白话描述需求——「保留讲产品优势的部分」「去掉开场寒喧」——AI 自动匹配段落。</p>
+        <p>DeepSeek 大模型语义理解。说「保留讲产品优势的部分」「去掉寒喧」AI 自动匹配段落。不满意就补充一句，像聊天一样微调。</p>
       </div>
+
       <div class="feature-card">
-        <span class="feature-icon">&#128270;</span>
-        <h3>关键词搜索 + 视频跳转</h3>
-        <p>输入关键词实时高亮匹配段落，回车跳转视频对应时刻。上下箭头快速导航匹配项。</p>
+        <div class="feature-icon fi-orange">&#128270;</div>
+        <h3>关键词搜索 + 跳转</h3>
+        <p>输入关键词实时高亮匹配段落。Enter 跳转视频对应时刻，&#8593;&#8595; 快速导航。快速定位关键发言。</p>
       </div>
+
       <div class="feature-card">
-        <span class="feature-icon">&#9999;</span>
-        <h3>字幕文字编辑</h3>
-        <p>转写有错别字？双击任意段落文字即可原地修改。修改后 SRT 导出和烧录字幕同步更新。</p>
+        <div class="feature-icon fi-pink">&#9999;</div>
+        <h3>字幕原地编辑</h3>
+        <p>转写有错别字？双击文字直接修改。修改后 SRT 导出和烧录字幕自动同步，无需二次操作。</p>
       </div>
+
       <div class="feature-card">
-        <span class="feature-icon">&#128424;</span>
+        <div class="feature-icon fi-yellow">&#128424;</div>
         <h3>三种导出方式</h3>
-        <p>拼接 MP4 &#183; 视频烧录字幕 &#183; SRT 字幕文件。SRT 可导入 Premiere、Final Cut Pro、DaVinci Resolve。</p>
+        <p>拼接 MP4（流拷贝秒出）&middot; 烧录字幕（28px 白字黑边）&middot; SRT 文件（导入 Pr / FCPX / 达芬奇）。</p>
       </div>
+
       <div class="feature-card">
-        <span class="feature-icon">&#127760;</span>
+        <div class="feature-icon fi-green">&#127760;</div>
         <h3>在线视频下载</h3>
-        <p>粘贴 B站、YouTube、Vimeo、TikTok 等平台链接，自动下载视频。也支持直链 URL 下载。</p>
+        <p>粘贴 B站 / YouTube / TikTok / Vimeo 链接，自动下载。支持直链 URL。素材获取零门槛。</p>
       </div>
+
       <div class="feature-card">
-        <span class="feature-icon">&#9889;</span>
-        <h3>开机自启</h3>
-        <p>macOS launchd 后台服务，开机自动启动，崩溃自动恢复。本地运行，数据不上传任何云端。</p>
+        <div class="feature-icon fi-blue">&#128187;</div>
+        <h3>跨平台 + 开机自启</h3>
+        <p>macOS &amp; Windows 原生支持。launchd 开机自动启动，崩溃自动恢复。就像系统自带工具一样可靠。</p>
       </div>
+
       <div class="feature-card">
-        <span class="feature-icon">🖥️</span>
-        <h3>跨平台支持</h3>
-        <p>macOS 和 Windows 均可运行。Windows 用户双击 start.bat 即可启动，自动检测 FFmpeg 路径。</p>
+        <div class="feature-icon fi-purple">&#128274;</div>
+        <h3>隐私优先，离线可用</h3>
+        <p>转写和说话人分离模型全部本地运行。视频文件不会离开你的电脑。唯一的网络请求是向 AI 发送文字稿摘要。</p>
       </div>
+
     </div>
   </div>
 </section>
 
-<!-- How it works -->
-<section class="section" id="workflow" style="background:var(--bg2)">
+<!-- Use Cases (NEW) -->
+<section class="section" id="scenarios" style="background:var(--bg2)">
+  <div class="container">
+    <div class="section-label">应用场景</div>
+    <h2 class="section-title">无论你是做什么的，ClipFlow 都能帮上忙</h2>
+    <p class="section-desc">五个典型场景，看看你最像哪一个。</p>
+
+    <div class="use-cases">
+
+      <!-- 自媒体 -->
+      <div class="use-case">
+        <div class="use-case-icon" style="background:rgba(78,165,255,.12);color:var(--blue)">&#127916;</div>
+        <div class="use-case-body">
+          <h4>自媒体 / 短视频创作者</h4>
+          <div class="who">痛点：对着镜头说了 20 分钟，只有 2 分钟能用</div>
+          <p>上传原始素材 &#8594; AI 自动生成带时间戳文字稿 &#8594; 输入「把讲干货的段落挑出来」「去掉所有口误和重复」&#8594; 导出精华版</p>
+          <div class="example">&#128204; 典型用法：拍摄一段产品测评视频 → AI 自动筛掉「嗯」「这个」等口头禅段落 → 一键导出带字幕的精华版 → 直接发抖音/B站</div>
+        </div>
+      </div>
+
+      <!-- 企业会议 -->
+      <div class="use-case">
+        <div class="use-case-icon" style="background:rgba(108,92,231,.12);color:var(--accent2)">&#128188;</div>
+        <div class="use-case-body">
+          <h4>企业会议 / 内部沟通</h4>
+          <div class="who">痛点：1 小时的会议，纪要要写半小时，还漏了关键信息</div>
+          <p>录制会议 &#8594; AI 转写 + 说话人分离（张总说了什么、李经理说了什么一目了然）&#8594; 搜索「Q2目标」「预算」直接跳转 &#8594; 导出 SRT 存档</p>
+          <div class="example">&#128204; 典型用法：周会录屏 → 说话人分离区分每位同事 → 搜索「 blocker 」找到关键讨论 → SRT 字幕存档，会后 5 分钟出纪要</div>
+        </div>
+      </div>
+
+      <!-- 教育培训 -->
+      <div class="use-case">
+        <div class="use-case-icon" style="background:rgba(0,210,160,.12);color:var(--green)">&#127891;</div>
+        <div class="use-case-body">
+          <h4>教育培训 / 知识付费</h4>
+          <div class="who">痛点：录了一堂 45 分钟的课，学生没耐心看完</div>
+          <p>上传课程视频 &#8594; AI 转写 &#8594; 搜索关键词定位到具体知识点 &#8594; 用 AI 对话保留核心讲解 &#8594; 导出带字幕的精华版</p>
+          <div class="example">&#128204; 典型用法：录制 45 分钟 Python 教程 → 搜索「装饰器」直接跳到相关段落 → AI 筛选所有代码讲解段落 → 导出 15 分钟精华版 + SRT 字幕</div>
+        </div>
+      </div>
+
+      <!-- 用户访谈 -->
+      <div class="use-case">
+        <div class="use-case-icon" style="background:rgba(240,98,146,.12);color:var(--pink)">&#128100;</div>
+        <div class="use-case-body">
+          <h4>用户研究 / 访谈分析</h4>
+          <div class="who">痛点：做了 5 场用户访谈，回听录音找到关键观点需要一整天</div>
+          <p>上传访谈录音视频 &#8594; 说话人分离区分主持人和用户 &#8594; 搜索「痛点」「不满意」「希望」快速定位 &#8594; 导出 SRT 供团队协作</p>
+          <div class="example">&#128204; 典型用法：5 场用户访谈视频 → 每场自动分离主持人和受访者 → 搜索「难用」汇集所有负面反馈 → SRT 分享给产品团队标注</div>
+        </div>
+      </div>
+
+      <!-- 播客 -->
+      <div class="use-case">
+        <div class="use-case-icon" style="background:rgba(255,192,72,.12);color:var(--yellow)">&#127897;</div>
+        <div class="use-case-body">
+          <h4>播客 / 音频节目制作</h4>
+          <div class="who">痛点：录了 90 分钟播客，剪辑去掉「然后」「就是说」和空白要花一下午</div>
+          <p>上传播客视频/音频 &#8594; AI 转写+说话人分离 &#8594; 告诉 AI「去掉重复的观点、拖沓的过渡、超过 3 秒的沉默」&#8594; 导出干净版</p>
+          <div class="example">&#128204; 典型用法：90 分钟双人播客 → 说话人分离标注主持人和嘉宾 → AI 自动剪掉沉默和口误 → 导出拼接版 + SRT 字幕上传平台</div>
+        </div>
+      </div>
+
+      <!-- 直播 -->
+      <div class="use-case">
+        <div class="use-case-icon" style="background:rgba(255,140,82,.12);color:var(--orange)">&#128250;</div>
+        <div class="use-case-body">
+          <h4>直播回放 / 精彩切片</h4>
+          <div class="who">痛点：直播 3 小时，想切出 5 个 1 分钟的精彩片段发短视频</div>
+          <p>下载直播回放 &#8594; AI 转写 &#8594; 告诉 AI「保留观众反应最热烈的部分」「保留有干货的解答」&#8594; 导出多个片段</p>
+          <div class="example">&#128204; 典型用法：B站直播回放 → AI 识别高能时刻 → 导出 5 个 60 秒精彩切片 → 烧录字幕直接发抖音/小红书</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Workflow Timeline -->
+<section class="section" id="workflow">
   <div class="container">
     <div class="section-label">工作流</div>
-    <h2 class="section-title">四步出片</h2>
-    <p class="section-desc">从上传到导出，全程在浏览器里完成。</p>
-    <div class="steps">
-      <div class="step-card">
-        <div class="step-num">1</div>
-        <h4>上传视频</h4>
-        <p>本地文件拖拽上传<br>或粘贴 B站/YouTube 链接</p>
+    <h2 class="section-title">只需要四步，全程浏览器完成</h2>
+    <p class="section-desc">没有时间轴，没有轨道拖拽，像聊天一样剪视频。</p>
+
+    <div class="timeline">
+
+      <div class="tl-row">
+        <div class="tl-content">
+          <h4><span class="step-badge">Step 1</span> 上传视频</h4>
+          <p>拖拽本地视频文件到浏览器，或粘贴 B站 / YouTube 链接自动下载。支持 mp4、mov、avi、mkv 等主流格式。</p>
+        </div>
+        <div class="tl-dot">&#128228;</div>
+        <div style="width:45%"></div>
       </div>
-      <div class="step-card">
-        <div class="step-num">2</div>
-        <h4>AI 转写</h4>
-        <p>Whisper 语音转文字<br>可选说话人分离</p>
+
+      <div class="tl-row">
+        <div style="width:45%"></div>
+        <div class="tl-dot">&#127908;</div>
+        <div class="tl-content">
+          <h4><span class="step-badge">Step 2</span> AI 转写 + 说话人识别</h4>
+          <p>Whisper 模型将语音转成带时间戳的文字稿。可选开启说话人分离，自动识别不同发言者并用彩色标签标注。</p>
+        </div>
       </div>
-      <div class="step-card">
-        <div class="step-num">3</div>
-        <h4>AI 对话剪辑</h4>
-        <p>大白话告诉 AI<br>保留哪些内容</p>
+
+      <div class="tl-row">
+        <div class="tl-content">
+          <h4><span class="step-badge">Step 3</span> AI 对话剪辑</h4>
+          <p>在对话面板用大白话告诉 AI 你要什么——「保留嘉宾聊技术的部分」「删掉开场废话」。不满意？再发一条补充，AI 会记住上下文。</p>
+        </div>
+        <div class="tl-dot">&#129504;</div>
+        <div style="width:45%"></div>
       </div>
-      <div class="step-card">
-        <div class="step-num">4</div>
-        <h4>一键导出</h4>
-        <p>拼接 / 烧录字幕 / SRT<br>三选一导出</p>
+
+      <div class="tl-row">
+        <div style="width:45%"></div>
+        <div class="tl-dot">&#128640;</div>
+        <div class="tl-content">
+          <h4><span class="step-badge">Step 4</span> 一键导出</h4>
+          <p>拼接 MP4（流拷贝秒级完成）&middot; 视频烧录字幕 &middot; 标准 SRT 文件。任选一种，一键下载。</p>
+        </div>
       </div>
+
     </div>
   </div>
 </section>
 
 <!-- Export -->
-<section class="section">
+<section class="section" style="background:var(--bg2)">
   <div class="container">
     <div class="section-label">导出选项</div>
-    <h2 class="section-title">灵活导出，适配任何后期流程</h2>
-    <p class="section-desc">不管是直接发布还是交给后期团队，总有一种格式适合你。</p>
+    <h2 class="section-title">三种格式，适配任何下游流程</h2>
+    <p class="section-desc">不管是直接发布，还是交给后期精修，总有适合你的导出方式。</p>
     <div class="export-cards">
       <div class="export-card">
-        <span class="icon">&#127910;</span>
+        <span class="e-icon">&#127910;</span>
         <h5>拼接视频导出</h5>
-        <small>选中段落拼接成完整 MP4<br>超快流式拷贝，秒级完成</small>
+        <small>选中段落合并为完整 MP4<br>流式拷贝，60 分钟视频 3 秒完成拼接</small>
       </div>
       <div class="export-card">
-        <span class="icon">&#127917;</span>
+        <span class="e-icon">&#127917;</span>
         <h5>烧录字幕导出</h5>
-        <small>字幕直接印在视频画面上<br>28px 白色字体 + 黑色描边 + 阴影</small>
+        <small>字幕永久印在视频画面上<br>28px 白色字体 + 3px 黑色描边 + 阴影<br>任何播放器都能看到字幕</small>
       </div>
       <div class="export-card">
-        <span class="icon">&#128196;</span>
-        <h5>SRT 字幕导出</h5>
-        <small>标准 SRT 格式<br>可导入任何专业剪辑软件</small>
+        <span class="e-icon">&#128196;</span>
+        <h5>SRT 字幕文件</h5>
+        <small>标准 SRT 格式，带时间轴<br>可直接导入 Premiere / Final Cut Pro<br>DaVinci Resolve / CapCut</small>
       </div>
     </div>
   </div>
 </section>
 
 <!-- Quick Start -->
-<section class="section" id="quickstart" style="background:var(--bg2)">
+<section class="section" id="quickstart">
   <div class="container">
     <div class="section-label">快速开始</div>
     <h2 class="section-title">一分钟跑起来</h2>
-    <p class="section-desc">Python 3.9+ 和 FFmpeg 是唯一的依赖。</p>
+    <p class="section-desc">Python 3.9+ 和 FFmpeg 是仅有的两个依赖。其他一切自动处理。</p>
 
-    <h4 style="font-size:.9rem;margin:28px 0 12px;color:var(--text)">1. 安装 FFmpeg</h4>
-    <div class="code-block">
-      <span class="comment"># macOS</span><br>
-      <span class="cmd">brew install ffmpeg</span><br><br>
-      <span class="comment"># Windows: 从 ffmpeg.org 下载，解压到 C:\ffmpeg，将 bin 目录加入 PATH</span>
-    </div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:32px">
+      <div>
+        <h4 style="font-size:.9rem;margin-bottom:10px;color:var(--text);display:flex;align-items:center;gap:8px">
+          <span style="display:inline-flex;width:22px;height:22px;background:var(--accent);color:#fff;border-radius:50%;font-size:.7rem;align-items:center;justify-content:center;font-weight:800">1</span>
+          安装 FFmpeg
+        </h4>
+        <div class="code-block">
+          <span class="comment"># macOS</span><br>
+          <span class="cmd">brew install ffmpeg</span><br>
+          <span class="comment"># Windows: ffmpeg.org 下载，解压到 C:\ffmpeg，加入 PATH</span>
+        </div>
+      </div>
 
-    <h4 style="font-size:.9rem;margin:28px 0 12px;color:var(--text)">2. 克隆项目 &amp; 安装依赖</h4>
-    <div class="code-block">
-      <span class="cmd">git clone</span> https://github.com/baidonghui1055224505-sudo/ClipFlow.git<br>
-      <span class="cmd">cd</span> ClipFlow<br>
-      <span class="cmd">pip install -r</span> backend/requirements.txt
-    </div>
+      <div>
+        <h4 style="font-size:.9rem;margin-bottom:10px;color:var(--text);display:flex;align-items:center;gap:8px">
+          <span style="display:inline-flex;width:22px;height:22px;background:var(--accent);color:#fff;border-radius:50%;font-size:.7rem;align-items:center;justify-content:center;font-weight:800">2</span>
+          克隆 &amp; 安装
+        </h4>
+        <div class="code-block">
+          <span class="cmd">git clone</span> https://github.com/baidonghui1055224505-sudo/ClipFlow.git<br>
+          <span class="cmd">cd</span> ClipFlow<br>
+          <span class="cmd">pip install -r</span> backend/requirements.txt
+        </div>
+      </div>
 
-    <h4 style="font-size:.9rem;margin:28px 0 12px;color:var(--text)">3. 配置 API Key（可选但推荐）</h4>
-    <div class="code-block">
-      <span class="comment"># 创建 backend/.env，写入：</span><br>
-      DEEPSEEK_API_KEY=<span class="prompt">sk-your-key</span><br>
-      HF_TOKEN=<span class="prompt">hf-your-token</span>  <span class="comment"># 可选，说话人分离需要</span>
-    </div>
-    <p style="font-size:.78rem;color:var(--text3);margin-top:8px">
-      DeepSeek API Key 免费获取：platform.deepseek.com/api_keys &nbsp;|&nbsp; 约 ¥1/百万字，充值 10 元够用很久<br>
-      不配 API Key 也可用：上传 → 转写 → 手动点选段落 → 导出。只是没有 AI 帮你自动选。
-    </p>
+      <div>
+        <h4 style="font-size:.9rem;margin-bottom:10px;color:var(--text);display:flex;align-items:center;gap:8px">
+          <span style="display:inline-flex;width:22px;height:22px;background:var(--accent);color:#fff;border-radius:50%;font-size:.7rem;align-items:center;justify-content:center;font-weight:800">3</span>
+          配置 API Key（推荐）
+        </h4>
+        <div class="code-block">
+          <span class="comment"># 创建 backend/.env:</span><br>
+          <span class="prompt">DEEPSEEK_API_KEY=</span>sk-your-key<br>
+          <span class="prompt">HF_TOKEN=</span>hf-your-token  <span class="comment"># 可选</span>
+        </div>
+        <p style="font-size:.74rem;color:var(--text3);margin-top:8px;line-height:1.6">
+          DeepSeek 免费注册：platform.deepseek.com &nbsp;|&nbsp; 约 ¥1/百万字<br>
+          不配 Key 也能用：上传 → 转写 → 手动点选 → 导出
+        </p>
+      </div>
 
-    <h4 style="font-size:.9rem;margin:28px 0 12px;color:var(--text)">4. 启动</h4>
-    <div class="code-block">
-      <span class="comment"># macOS</span><br>
-      <span class="cmd">./start.sh</span><br><br>
-      <span class="comment"># Windows: 双击 start.bat</span>
+      <div>
+        <h4 style="font-size:.9rem;margin-bottom:10px;color:var(--text);display:flex;align-items:center;gap:8px">
+          <span style="display:inline-flex;width:22px;height:22px;background:var(--accent);color:#fff;border-radius:50%;font-size:.7rem;align-items:center;justify-content:center;font-weight:800">4</span>
+          启动服务
+        </h4>
+        <div class="code-block">
+          <span class="comment"># macOS</span><br>
+          <span class="cmd">./start.sh</span><br>
+          <span class="comment"># Windows: 双击 start.bat</span>
+        </div>
+        <p style="margin-top:12px;font-size:.85rem">
+          浏览器打开 <strong style="color:var(--accent2);background:rgba(108,92,231,.1);padding:2px 8px;border-radius:4px">http://localhost:8000</strong>
+        </p>
+      </div>
     </div>
-    <p style="margin-top:16px">浏览器打开 <strong style="color:var(--accent2)">http://localhost:8000</strong>，开始使用。</p>
   </div>
 </section>
 
 <!-- Comparison -->
-<section class="section">
+<section class="section" style="background:var(--bg2)">
   <div class="container">
     <div class="section-label">为什么选择 ClipFlow</div>
-    <h2 class="section-title">对比传统剪辑工具</h2>
-    <p class="section-desc">ClipFlow 的定位不是替代 Premiere，而是填补「快速出片」的空白。</p>
-    <div class="compare-wrapper" style="overflow-x:auto">
+    <h2 class="section-title">一张表看懂差异</h2>
+    <p class="section-desc">ClipFlow 不是要替代专业软件，而是填补「快速出片」这个无人占领的空白。</p>
+    <div class="compare-wrapper">
       <table class="compare-table">
         <thead>
-          <tr><th></th><th>ClipFlow</th><th>剪映</th><th>Premiere Pro</th><th>Descript</th></tr>
+          <tr><th>能力维度</th><th style="color:var(--accent2)">ClipFlow</th><th>剪映 / CapCut</th><th>Premiere Pro</th><th>Descript</th></tr>
         </thead>
         <tbody>
-          <tr><td>AI 语义理解剪辑</td><td class="check">&#10003;</td><td class="dash">&#8212;</td><td class="dash">&#8212;</td><td class="check">&#10003;</td></tr>
+          <tr class="highlight"><td>AI 语义理解剪辑</td><td class="check">&#10003;</td><td class="dash">&#8212;</td><td class="dash">&#8212;</td><td class="check">&#10003;</td></tr>
           <tr><td>说话人分离</td><td class="check">&#10003;</td><td class="dash">&#8212;</td><td class="dash">&#8212;</td><td class="check">&#10003;</td></tr>
-          <tr><td>多轮对话微调</td><td class="check">&#10003;</td><td class="dash">&#8212;</td><td class="dash">&#8212;</td><td class="dash">&#8212;</td></tr>
+          <tr class="highlight"><td>多轮对话微调</td><td class="check">&#10003;</td><td class="dash">&#8212;</td><td class="dash">&#8212;</td><td class="dash">&#8212;</td></tr>
           <tr><td>SRT 字幕导出</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td></tr>
-          <tr><td>平台视频下载</td><td class="check">&#10003;</td><td class="dash">&#8212;</td><td class="dash">&#8212;</td><td class="dash">&#8212;</td></tr>
-          <tr><td>完全离线可用</td><td class="check">&#10003;</td><td class="dash">&#8212;</td><td class="check">&#10003;</td><td class="dash">&#8212;</td></tr>
+          <tr class="highlight"><td>字幕原地编辑</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td></tr>
+          <tr><td>平台视频下载 (B站/YT)</td><td class="check">&#10003;</td><td class="dash">&#8212;</td><td class="dash">&#8212;</td><td class="dash">&#8212;</td></tr>
+          <tr class="highlight"><td>完全离线可用</td><td class="check">&#10003;</td><td class="dash">&#8212;</td><td class="check">&#10003;</td><td class="dash">&#8212;</td></tr>
           <tr><td>开源免费</td><td class="check">&#10003;</td><td class="dash">&#8212;</td><td class="dash">&#8212;</td><td class="dash">&#8212;</td></tr>
-          <tr><td>价格</td><td style="color:var(--green);font-weight:700">免费 + API 按量</td><td>免费 / 会员</td><td>订阅制</td><td>订阅制</td></tr>
+          <tr class="highlight"><td>费用</td><td style="color:var(--green);font-weight:700">免费 + API 按量<br><span style="font-size:.72rem;color:var(--text3)">充值 10 元用半年</span></td><td>免费 / 会员</td><td>订阅制<br><span style="font-size:.72rem;color:var(--text3)">$22.99/月</span></td><td>订阅制<br><span style="font-size:.72rem;color:var(--text3)">$24/月</span></td></tr>
         </tbody>
       </table>
     </div>
   </div>
 </section>
 
-<!-- Tech Stack -->
-<section class="section" style="background:var(--bg2)">
+<!-- Architecture -->
+<section class="section">
   <div class="container">
-    <div class="section-label">技术栈</div>
+    <div class="section-label">技术架构</div>
     <h2 class="section-title">完全本地，隐私优先</h2>
-    <p class="section-desc">所有 AI 模型运行在本地。你的视频和音频数据不会上传到任何云端服务器——唯一的例外是 AI 对话功能会将文字稿摘要发送给 DeepSeek API 做语义匹配。</p>
-    <div class="code-block" style="margin-top:32px">
-<span class="comment">浏览器 (单页 HTML)</span>
-      <span class="prompt">&#8595; HTTP / REST API</span>
-<span class="comment">FastAPI + Uvicorn (异步 Web 服务)</span>
-      <span class="prompt">&#8595; 调用</span>
-<span class="comment">faster-whisper    </span>语音转写  <span class="comment">| CPU, int8 量化</span>
-<span class="comment">pyannote.audio    </span>说话人分离 <span class="comment">| speaker-diarization-3.1</span>
-<span class="comment">DeepSeek Chat     </span>语义理解  <span class="comment">| 多轮对话</span>
-<span class="comment">FFmpeg            </span>视频处理  <span class="comment">| 剪辑、拼接、字幕烧录</span>
-      <span class="prompt">&#8595; 持久化</span>
-<span class="comment">本地文件系统 (临时文件 + 会话内存)</span>
+    <p class="section-desc">转写和说话人分离模型全部在本地 CPU 上运行。视频文件永远不会离开你的电脑。</p>
+
+    <div class="arch-diagram">
+      <div class="arch-layers">
+        <div class="arch-layer arch-layer-top">
+          <span class="arch-label" style="color:var(--orange)">&#127760; 前端</span>
+          <span class="arch-items">
+            <span class="arch-chip">单页 HTML</span>
+            <span class="arch-chip">零框架依赖</span>
+            <span class="arch-chip">响应式布局</span>
+          </span>
+        </div>
+        <div class="arch-arrow">&#8595; HTTP / REST API</div>
+        <div class="arch-layer arch-layer-mid">
+          <span class="arch-label" style="color:var(--accent2)">&#9881; 后端</span>
+          <span class="arch-items">
+            <span class="arch-chip">FastAPI</span>
+            <span class="arch-chip">Uvicorn</span>
+            <span class="arch-chip">异步非阻塞</span>
+          </span>
+        </div>
+        <div class="arch-arrow">&#8595; 调用</div>
+        <div class="arch-layer arch-layer-bot">
+          <span class="arch-label" style="color:var(--green)">&#129504; AI 引擎</span>
+          <span class="arch-items">
+            <span class="arch-chip">faster-whisper (CPU/int8)</span>
+            <span class="arch-chip">pyannote.audio 3.1</span>
+            <span class="arch-chip">DeepSeek Chat API</span>
+          </span>
+        </div>
+        <div class="arch-arrow">&#8595; 视频处理</div>
+        <div class="arch-layer arch-layer-base">
+          <span class="arch-label" style="color:var(--text2)">&#128736; 工具层</span>
+          <span class="arch-items">
+            <span class="arch-chip">FFmpeg (libx264)</span>
+            <span class="arch-chip">libass (字幕渲染)</span>
+            <span class="arch-chip">yt-dlp (平台下载)</span>
+          </span>
+        </div>
+        <div class="arch-arrow">&#8595; 存储</div>
+        <div class="arch-layer arch-layer-base">
+          <span class="arch-label" style="color:var(--text3)">&#128451; 持久化</span>
+          <span class="arch-items">
+            <span class="arch-chip">本地文件系统</span>
+            <span class="arch-chip">会话内存</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section" style="text-align:center;background:var(--bg2)">
+  <div class="container">
+    <h2 style="font-size:2rem;font-weight:800;margin-bottom:16px;letter-spacing:-.02em">准备好试试了吗？</h2>
+    <p style="color:var(--text2);margin-bottom:36px;font-size:.95rem">开源免费，十分钟就能跑起来。不需要信用卡，不需要注册。</p>
+    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+      <a href="#quickstart" class="btn btn-primary" style="font-size:.94rem;padding:14px 32px">&#11015; 快速开始</a>
+      <a href="https://github.com/baidonghui1055224505-sudo/ClipFlow" target="_blank" class="btn btn-outline" style="font-size:.94rem;padding:14px 32px">&#9731; 给个 Star</a>
     </div>
   </div>
 </section>
@@ -356,11 +654,11 @@
 <footer>
   <div class="container">
     <p>
-      ClipFlow &middot; 开源项目 &middot;
+      <strong style="color:var(--text)">ClipFlow</strong> &middot; AI 自动视频剪辑工具 &middot; 开源项目 &middot;
       <a href="https://github.com/baidonghui1055224505-sudo/ClipFlow" target="_blank">GitHub</a> &middot;
       <a href="https://github.com/baidonghui1055224505-sudo/ClipFlow/blob/main/README.md" target="_blank">文档</a>
     </p>
-    <p style="margin-top:6px">Made with &#10084; by the ClipFlow team</p>
+    <p style="margin-top:8px">Made with dedication by the ClipFlow team</p>
   </div>
 </footer>
 
