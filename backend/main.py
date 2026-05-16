@@ -327,4 +327,23 @@ def export_burn(req: dict):
                         filename=f"subtitled_{video_id}.mp4")
 
 
+@app.post("/api/update-segment")
+def update_segment(req: dict):
+    """Edit a single segment's text (typo correction)."""
+    video_id = req["video_id"]
+    segment_idx: int = req["segment_index"]
+    new_text: str = req["new_text"].strip()
+
+    session = sessions.get(video_id)
+    if not session or not session.get("transcript"):
+        return JSONResponse({"error": "Session not found or not transcribed"}, 400)
+
+    segments = session["transcript"]["segments"]
+    if segment_idx < 0 or segment_idx >= len(segments):
+        return JSONResponse({"error": "Segment index out of range"}, 400)
+
+    segments[segment_idx]["text"] = new_text
+    return {"ok": True, "segment_index": segment_idx, "text": new_text}
+
+
 app.mount("/", StaticFiles(directory=Path(__file__).parent.parent / "frontend", html=True))

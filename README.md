@@ -10,8 +10,13 @@
 - **说话人分离** — pyannote.audio speaker-diarization-3.1，自动区分不同说话人，支持双击改名
 - **AI 多轮对话剪辑** — DeepSeek 大模型语义理解，用大白话描述需求（如「保留讲产品优势的部分」），AI 自动匹配段落
 - **关键词搜索 + 视频跳转** — 输入关键词高亮匹配段，回车跳转视频对应时刻，上下箭头快速导航
-- **三种导出方式** — 拼接 MP4 / 字幕烧录 / SRT 字幕文件（可导入 Premiere、Final Cut Pro、DaVinci Resolve）
+- **字幕文字编辑** — 双击任意段落文字原地修改错别字，修改后 SRT 和烧录字幕自动同步
+- **三种导出方式** — 拼接 MP4 / 视频烧录字幕（28px 白字黑边加阴影）/ SRT 字幕文件（可导入 Premiere、Final Cut Pro、DaVinci Resolve）
+- **在线视频下载** — 粘贴 B站、YouTube、Vimeo、TikTok 等平台链接，自动下载视频
+- **跨平台** — macOS 和 Windows 均可运行，自动检测 FFmpeg 路径
 - **开机自启** — macOS launchd 后台服务，开机自动启动，崩溃自动恢复
+
+> 产品介绍页：[ClipFlow 官方介绍](https://baidonghui1055224505-sudo.github.io/ClipFlow/product)
 
 ## 快速开始
 

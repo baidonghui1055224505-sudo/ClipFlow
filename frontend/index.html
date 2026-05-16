@@ -327,7 +327,9 @@ button,input,select,label{cursor:pointer;font-family:inherit}
 .spk-2{background:#d1fae5;color:#047857}
 .spk-3{background:#fef3c7;color:#b45309}
 .spk-4{background:#e9d5ff;color:#7c3aed}
-.seg-text{font-size:.82rem;line-height:1.55;color:var(--text-primary);word-break:break-word}
+.seg-text{font-size:.82rem;line-height:1.55;color:var(--text-primary);word-break:break-word;cursor:text}
+.seg-text:hover{background:var(--bg-hover);border-radius:4px}
+.seg-edit-input{font-size:.82rem;line-height:1.55;color:var(--text-primary);border:1.5px solid var(--accent);border-radius:6px;padding:2px 6px;width:100%;background:var(--bg-surface);font-family:inherit;outline:none;box-sizing:border-box;resize:none}
 
 /* ── Search ── */
 .search-box{
@@ -942,15 +944,23 @@ function renderTranscript(filter) {
     div.innerHTML = `
       <span class="time">${fmtTime(seg.start)}</span>
       ${speakerHtml}
-      <span class="seg-text">${escapeHtml(seg.text)}</span>
+      <span class="seg-text" data-seg-id="${seg.id}">${escapeHtml(seg.text)}</span>
     `;
 
     div.addEventListener('click', (e) => {
       if (e.target.classList.contains('speaker-tag')) return;
+      if (e.target.classList.contains('seg-text')) return;
       if (selectedIds.has(seg.id)) selectedIds.delete(seg.id);
       else selectedIds.add(seg.id);
       renderTranscript();
       videoPlayer.currentTime = seg.start;
+    });
+
+    // Double-click to edit subtitle text
+    const textSpan = div.querySelector('.seg-text');
+    textSpan.addEventListener('dblclick', (e) => {
+      e.stopPropagation();
+      startEditSegment(seg, textSpan);
     });
 
     if (seg.speaker) {
@@ -1041,6 +1051,60 @@ function escapeHtml(text) {
   const d = document.createElement('div');
   d.textContent = text;
   return d.innerHTML;
+}
+
+// ── Inline subtitle editing ──
+function startEditSegment(seg, textSpan) {
+  if (textSpan.querySelector('input, textarea')) return; // already editing
+
+  const originalText = seg.text;
+  const input = document.createElement('textarea');
+  input.className = 'seg-edit-input';
+  input.value = originalText;
+  input.rows = Math.max(1, Math.ceil(originalText.length / 50));
+
+  textSpan.textContent = '';
+  textSpan.appendChild(input);
+  input.focus();
+  input.setSelectionRange(input.value.length, input.value.length);
+
+  const save = async () => {
+    const newText = input.value.trim();
+    if (!newText || newText === originalText) {
+      textSpan.textContent = originalText;
+      return;
+    }
+    try {
+      const res = await fetch('/api/update-segment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ video_id: videoId, segment_index: seg.id, new_text: newText }),
+      });
+      if (res.ok) {
+        seg.text = newText;
+        textSpan.textContent = newText;
+      } else {
+        const err = await res.json();
+        showError(err.error || '保存失败');
+        textSpan.textContent = originalText;
+      }
+    } catch (e) {
+      showError('网络错误，保存失败');
+      textSpan.textContent = originalText;
+    }
+  };
+
+  input.addEventListener('blur', save);
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      input.blur();
+    }
+    if (e.key === 'Escape') {
+      input.value = originalText;
+      input.blur();
+    }
+  });
 }
 
 function showError(msg) {

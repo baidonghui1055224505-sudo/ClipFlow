@@ -25,6 +25,16 @@ def _run_ffmpeg(args: list[str], description: str) -> None:
     if result.returncode != 0:
         raise RuntimeError(f"FFmpeg {description} failed: {result.stderr}")
 
+def _run_ffmpeg_verbose(args: list[str], description: str) -> None:
+    """Like _run_ffmpeg but captures warnings for diagnostic purposes."""
+    cmd = [_FFMPEG, "-y", "-v", "warning"] + args
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    if result.returncode != 0:
+        raise RuntimeError(f"FFmpeg {description} failed: {result.stderr}")
+    if result.stderr.strip():
+        import sys
+        print(f"[ffmpeg {description}] {result.stderr.strip()}", file=sys.stderr, flush=True)
+
 
 def extract_audio(video_path: str | Path) -> str:
     """Extract audio from video as 16kHz mono WAV for Whisper."""
@@ -127,9 +137,22 @@ def burn_subtitles(video_path: str | Path, segments: list[dict], output_path: st
     # Escape path for FFmpeg subtitles filter: handle Windows drive letter colon
     escaped = srt_path.replace("\\", "/").replace(":", "\\:")
     output_path = str(output_path)
-    _run_ffmpeg(
+
+    # Fontsize (ASS uses lowercase s), BorderStyle=1 for outline,
+    # Shadow for drop shadow, MarginV for vertical padding
+    style = (
+        "Fontsize=28,"
+        "PrimaryColour=&H00FFFFFF,"
+        "OutlineColour=&H00000000,"
+        "BackColour=&H80000000,"
+        "Outline=3,"
+        "Shadow=2,"
+        "BorderStyle=1,"
+        "MarginV=24"
+    )
+    _run_ffmpeg_verbose(
         ["-i", str(video_path), "-vf",
-         f"subtitles={escaped}:force_style='FontSize=24,PrimaryColour=&HFFFFFF,OutlineColour=&H000000,Outline=2'",
+         f"subtitles={escaped}:force_style='{style}'",
          "-c:a", "copy", output_path],
         "burn subtitles",
     )
